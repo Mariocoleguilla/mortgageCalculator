@@ -1,0 +1,60 @@
+// Variables para personalizar los colores y el estilo
+$primary-color: #3498db
+$secondary-color: #2ecc71
+$header-bg: #f4f4f9
+$border-color: #ddd
+$hover-bg: #ecf0f1
+$even-row-bg: #fafafa
+$font-color: #333
+
+// Estilos globales para la tabla
+table
+  width: 100%
+  border-collapse: collapse
+  margin: 20px 0
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
+
+  th, td
+    padding: 12px 15px
+    text-align: left
+    border: 1px solid $border-color
+    font-size: 14px
+    color: $font-color
+
+// Encabezado de la tabla
+thead
+  background-color: $header-bg
+  color: $primary-color
+  font-weight: bold
+
+  th
+    text-transform: uppercase
+    letter-spacing: 0.05em
+
+// Filas alternadas con fondo gris claro
+tbody
+  tr:nth-child(even)
+    background-color: $even-row-bg
+
+// Efecto hover sobre las filas
+tbody
+  tr:hover
+    background-color: $hover-bg
+    cursor: pointer
+
+// Bordes de la tabla
+table, th, td
+  border-radius: 8px
+  border: 1px solid $border-color
+
+// Estilos de las celdas de la tabla
+td
+  text-align: center
+  font-family: 'Arial', sans-serif
+
+// Estilo para la tabla cuando no hay datos
+.empty-table
+  text-align: center
+  color: $secondary-color
+  font-size: 18px
+  padding: 20px

@@ -1,0 +1,66 @@
+<form [formGroup]="mortgageForm">
+    <!-- Field: Amount -->
+    <div>
+      <label for="amount">Amount to Finance</label>
+      <input
+        id="amount"
+        type="number"
+        formControlName="amount"
+        placeholder="Enter the amount"
+      />
+      <div *ngIf="mortgageForm.get('amount')?.invalid && mortgageForm.get('amount')?.touched">
+        <small *ngIf="mortgageForm.get('amount')?.errors?.['required']">This field is required</small>
+        <small *ngIf="mortgageForm.get('amount')?.errors?.['min']">Must be at least 1000</small>
+      </div>
+    </div>
+
+    <!-- Field: Interest Rate -->
+    <div>
+      <label for="interestRate">Interest Rate (%)</label>
+      <input
+        id="interestRate"
+        type="number"
+        formControlName="interestRate"
+        placeholder="Enter the interest rate in %"
+      />
+      <div *ngIf="mortgageForm.get('interestRate')?.invalid && mortgageForm.get('interestRate')?.touched">
+        <small *ngIf="mortgageForm.get('interestRate')?.errors?.['required']">This field is required</small>
+        <small *ngIf="mortgageForm.get('interestRate')?.errors?.['min']">Must be greater or equal to 0</small>
+        <small *ngIf="mortgageForm.get('interestRate')?.errors?.['max']">Must be less or equal to 100</small>
+      </div>
+    </div>
+
+    <!-- Field: Years -->
+    <div>
+      <label for="years">Years</label>
+      <input
+        id="years"
+        type="number"
+        formControlName="years"
+        placeholder="Enter the number of years"
+      />
+      <div *ngIf="mortgageForm.get('years')?.invalid && mortgageForm.get('years')?.touched">
+        <small *ngIf="mortgageForm.get('years')?.errors?.['required']">This field is required</small>
+        <small *ngIf="mortgageForm.get('years')?.errors?.['min']">Must be at least 1 year</small>
+      </div>
+    </div>
+
+    <!-- Field: Periods per year -->
+    <div>
+      <label for="periodsPerYear">Periods per year</label>
+      <input
+        id="periodsPerYear"
+        type="number"
+        formControlName="periodsPerYear"
+        placeholder="Enter the number of periods"
+      />
+      <div *ngIf="mortgageForm.get('periodsPerYear')?.invalid && mortgageForm.get('periodsPerYear')?.touched">
+        <small *ngIf="mortgageForm.get('periodsPerYear')?.errors?.['required']">This field is required</small>
+        <small *ngIf="mortgageForm.get('periodsPerYear')?.errors?.['min']">Must be at least 1 period</small>
+      </div>
+    </div>
+  
+    <!-- Submit Button -->
+    <button [disabled]="mortgageForm.invalid" (click)="submitForm()">Submit</button>
+  </form>
+  

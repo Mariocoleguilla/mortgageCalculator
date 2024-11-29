@@ -1,0 +1,23 @@
+<p>{{this.monthlyFee}}</p>
+<table *ngIf="this.tableData.length > 0">
+    <thead>
+        <tr>
+            <th>Nº Cuota</th>
+            <th>Cuota</th>
+            <th>Interés</th>
+            <th>Capital</th>
+            <th>Amortización</th>
+            <th>Capital Restante</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of this.tableData">
+            <td>{{row.period}}</td>
+            <td>{{row.monthlyFee}}</td>
+            <td>{{row.fees}}</td>
+            <td>{{row.capital}}</td>
+            <td>{{row.amortization}}</td>
+            <td>{{row.remainingCapital}}</td>
+        </tr>
+    </tbody>
+</table>
