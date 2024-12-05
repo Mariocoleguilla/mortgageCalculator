@@ -19,7 +19,7 @@ export class FormMortgageComponent implements OnInit {
   ) {
     this.mortgageForm = this.fb.group({
       amount: [138400, [Validators.required, Validators.min(1000)]], // Minimum amount to finance
-      interestRate: [2.35, [Validators.required, Validators.min(0), Validators.max(100)]], // TIN as a percentage
+      interestRate: [2.45, [Validators.required, Validators.min(0), Validators.max(100)]], // TIN as a percentage
       years: [25, [Validators.required, Validators.min(1)]], // Minimum 1 year
       periodsPerYear: [12, [Validators.required, Validators.min(1)]], // Minimum 1 period
     });
