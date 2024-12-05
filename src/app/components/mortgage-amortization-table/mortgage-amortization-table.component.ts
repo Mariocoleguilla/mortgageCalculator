@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormMortgage } from 'src/app/models/form-mortgage/form-mortgage.module';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
@@ -13,15 +13,19 @@ export class MortgageAmortizationTableComponent implements OnInit {
   formData: any;
   monthlyFee: number | null = null;
   tableData: any[] = [];
+  totalFees: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private mortgageService: MortgageService
+    private mortgageService: MortgageService,
+    private router: Router
   ) {
     this.mortgageService.formData$.subscribe((data) => {
-      if (data) {
+      if (Object.keys(data).length) {
         this.formData = data;
         this.fillMortgageTable(this.formData);
+      } else {
+        this.router.navigate(["/home"]);
       }
     });
   }
@@ -40,6 +44,7 @@ export class MortgageAmortizationTableComponent implements OnInit {
     for (let i = 0; i < formData.years; i++) {
       for (let j = 0; j < formData.periodsPerYear; j++) {
         fees = ((remainingCapital*formData.interestRate)/formData.periodsPerYear)/100;
+        this.totalFees += fees;
         amortization += this.monthlyFee - fees;
         remainingCapital = remainingCapital - (this.monthlyFee - fees);
         this.tableData.push({
