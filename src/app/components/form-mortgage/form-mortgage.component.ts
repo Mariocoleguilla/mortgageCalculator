@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
@@ -14,7 +14,7 @@ export class FormMortgageComponent implements OnInit {
 
   constructor(
     private fb: UntypedFormBuilder,
-    private router: Router,
+    @Inject(Router) private router: Router,
     private mortgageService: MortgageService
   ) {
     this.mortgageForm = this.fb.group({

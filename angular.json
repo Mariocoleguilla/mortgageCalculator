@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "mortgageCalculator:build:production"
+              "buildTarget": "mortgageCalculator:build:production"
             },
             "development": {
-              "browserTarget": "mortgageCalculator:build:development"
+              "buildTarget": "mortgageCalculator:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mortgageCalculator:build"
+            "buildTarget": "mortgageCalculator:build"
           }
         },
         "test": {
@@ -106,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
