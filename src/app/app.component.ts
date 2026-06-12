@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { UntypedFormGroup, FormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.sass'],
+    standalone: false
 })
 export class AppComponent {
   

@@ -4,9 +4,10 @@ import { FormMortgage } from 'src/app/models/form-mortgage/form-mortgage.module'
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 @Component({
-  selector: 'app-mortgage-amortization-table',
-  templateUrl: './mortgage-amortization-table.component.html',
-  styleUrls: ['./mortgage-amortization-table.component.sass']
+    selector: 'app-mortgage-amortization-table',
+    templateUrl: './mortgage-amortization-table.component.html',
+    styleUrls: ['./mortgage-amortization-table.component.sass'],
+    standalone: false
 })
 export class MortgageAmortizationTableComponent implements OnInit {
 

@@ -4,16 +4,17 @@ import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 @Component({
-  selector: 'app-form-mortgage',
-  templateUrl: './form-mortgage.component.html',
-  styleUrls: ['./form-mortgage.component.sass']
+    selector: 'app-form-mortgage',
+    templateUrl: './form-mortgage.component.html',
+    styleUrls: ['./form-mortgage.component.sass'],
+    standalone: false
 })
 export class FormMortgageComponent implements OnInit {
 
   mortgageForm: UntypedFormGroup;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    @Inject(UntypedFormBuilder) private fb: UntypedFormBuilder,
     @Inject(Router) private router: Router,
     private mortgageService: MortgageService
   ) {
