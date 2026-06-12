@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
@@ -10,10 +10,10 @@ import { MortgageService } from 'src/app/services/mortgage.service';
 })
 export class FormMortgageComponent implements OnInit {
 
-  mortgageForm: FormGroup;
+  mortgageForm: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private mortgageService: MortgageService
   ) {

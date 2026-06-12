@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, FormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,9 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 })
 export class AppComponent {
   
-  mortgageForm: FormGroup;
+  mortgageForm: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.mortgageForm = this.fb.group({
       years: [null, [Validators.required, Validators.min(1)]], // Minimum 1 year
       interestRate: [null, [Validators.required, Validators.min(0), Validators.max(100)]], // TIN as a percentage
