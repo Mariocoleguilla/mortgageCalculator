@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       @for (row of this.tableData; track row) {
-        <tr>
+        <tr (click)="onRowClick(row)">
           <td>{{row.period}}</td>
           <td>{{row.monthlyFee | currency:'EUR':true}}</td>
           <td>{{row.fees | currency:'EUR':true}}</td>

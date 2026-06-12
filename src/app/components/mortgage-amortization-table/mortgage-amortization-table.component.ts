@@ -34,6 +34,12 @@ export class MortgageAmortizationTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onRowClick(row: any): void {
+    // Combinamos los datos del formulario con la cuota seleccionada
+    this.mortgageService.setFormData({ ...this.formData, selectedInstallment: row });
+    this.router.navigate(['/simulator']);
+  }
+
   fillMortgageTable(formData: FormMortgage): void {
     let period: number = 1;
     this.monthlyFee = this.calculatePMT(formData.amount, formData.interestRate, formData.years, formData.periodsPerYear);
