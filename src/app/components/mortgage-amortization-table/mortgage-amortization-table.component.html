@@ -1,24 +1,28 @@
 <p>Cuota Mensual: {{this.monthlyFee | currency:'EUR':true}}</p>
 <p>Total intereses en {{this.formData.years}} años: {{this.totalFees | currency:'EUR':true}}</p>
-<table *ngIf="this.tableData.length > 0">
+@if (this.tableData.length > 0) {
+  <table>
     <thead>
-        <tr>
-            <th>Nº Cuota</th>
-            <th>Cuota</th>
-            <th>Interés</th>
-            <th>Capital</th>
-            <th>Amortización</th>
-            <th>Capital Restante</th>
-        </tr>
+      <tr>
+        <th>Nº Cuota</th>
+        <th>Cuota</th>
+        <th>Interés</th>
+        <th>Capital</th>
+        <th>Amortización</th>
+        <th>Capital Restante</th>
+      </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let row of this.tableData">
-            <td>{{row.period}}</td>
-            <td>{{row.monthlyFee | currency:'EUR':true}}</td>
-            <td>{{row.fees | currency:'EUR':true}}</td>
-            <td>{{row.capital | currency:'EUR':true}}</td>
-            <td>{{row.amortization | currency:'EUR':true}}</td>
-            <td>{{row.remainingCapital | currency:'EUR':true}}</td>
+      @for (row of this.tableData; track row) {
+        <tr>
+          <td>{{row.period}}</td>
+          <td>{{row.monthlyFee | currency:'EUR':true}}</td>
+          <td>{{row.fees | currency:'EUR':true}}</td>
+          <td>{{row.capital | currency:'EUR':true}}</td>
+          <td>{{row.amortization | currency:'EUR':true}}</td>
+          <td>{{row.remainingCapital | currency:'EUR':true}}</td>
         </tr>
+      }
     </tbody>
-</table>
+  </table>
+}
