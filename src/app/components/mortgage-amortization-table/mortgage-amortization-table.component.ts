@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormMortgage } from 'src/app/models/form-mortgage/form-mortgage.module';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 @Component({
     selector: 'app-mortgage-amortization-table',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './mortgage-amortization-table.component.html',
-    styleUrls: ['./mortgage-amortization-table.component.sass'],
-    standalone: false
+    styleUrls: ['./mortgage-amortization-table.component.sass']
 })
-export class MortgageAmortizationTableComponent implements OnInit {
+export class MortgageAmortizationTableComponent {
 
   formData: any;
   monthlyFee: number | null = null;
@@ -17,21 +19,16 @@ export class MortgageAmortizationTableComponent implements OnInit {
   totalFees: number = 0;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private mortgageService: MortgageService,
     private router: Router
   ) {
-    this.mortgageService.formData$.subscribe((data) => {
-      if (Object.keys(data).length) {
-        this.formData = data;
-        this.fillMortgageTable(this.formData);
-      } else {
-        this.router.navigate(["/home"]);
-      }
-    });
-  }
-
-  ngOnInit(): void {
+    const data = this.mortgageService.formData.value;
+    if (data && Object.keys(data).length) {
+      this.formData = data;
+      this.fillMortgageTable(this.formData);
+    } else {
+      this.router.navigate(["/"]);
+    }
   }
 
   onRowClick(row: any): void {
@@ -41,6 +38,8 @@ export class MortgageAmortizationTableComponent implements OnInit {
   }
 
   fillMortgageTable(formData: FormMortgage): void {
+    this.tableData = [];
+    this.totalFees = 0;
     let period: number = 1;
     this.monthlyFee = this.calculatePMT(formData.amount, formData.interestRate, formData.years, formData.periodsPerYear);
     
@@ -75,10 +74,7 @@ export class MortgageAmortizationTableComponent implements OnInit {
     if (ratePerPeriod === 0) {
       return principal / totalPayments;
     }
-  
-    const numerator = ratePerPeriod * Math.pow(1 + ratePerPeriod, totalPayments);
-    const denominator = Math.pow(1 + ratePerPeriod, totalPayments) - 1;
-  
-    return principal * numerator / denominator;
+
+    return (principal * ratePerPeriod * Math.pow(1 + ratePerPeriod, totalPayments)) / (Math.pow(1 + ratePerPeriod, totalPayments) - 1);
   }
 }

@@ -9,7 +9,7 @@ export class MortgageService {
 
   constructor() { }
   
-  private formData = new BehaviorSubject<any>({}); // Initial data
+  public formData = new BehaviorSubject<any>({}); // Initial data
   formData$ = this.formData.asObservable(); // Public Observable
 
   setFormData(data: any) {

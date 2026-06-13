@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 @Component({
   selector: 'app-amortization-simulator',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './amortization-simulator.component.html',
   styleUrls: ['./amortization-simulator.component.sass']
 } )
@@ -18,13 +22,12 @@ export class AmortizationSimulatorComponent implements OnInit {
   constructor(private mortgageService: MortgageService, private router: Router) { }
 
   ngOnInit(): void {
-    this.mortgageService.formData$.subscribe(data => {
-      if (data && data.selectedInstallment) {
-        this.formData = data;
-      } else {
-        this.router.navigate(['/home']);
-      }
-    });
+    const data = this.mortgageService.formData.value;
+    if (data && data.selectedInstallment) {
+      this.formData = data;
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   calculateSimulation(): void {

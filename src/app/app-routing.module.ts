@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormMortgageComponent } from './components/form-mortgage/form-mortgage.component';
 import { ErrorComponent } from './components/error/error.component';
 import { MortgageAmortizationTableComponent } from './components/mortgage-amortization-table/mortgage-amortization-table.component';
+import { AmortizationSimulatorComponent } from './components/mortgage-amortization-table/amortization-simulator.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'table',
     component: MortgageAmortizationTableComponent
+  },
+  {
+    path: 'simulator',
+    component: AmortizationSimulatorComponent
   },
   {
     path: '',

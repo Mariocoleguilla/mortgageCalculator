@@ -10,12 +10,11 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ErrorComponent } from './components/error/error.component';
+import { AmortizationSimulatorComponent } from './components/mortgage-amortization-table/amortization-simulator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FormMortgageComponent,
-    MortgageAmortizationTableComponent,
     HeaderComponent,
     NavbarComponent,
     FooterComponent,
@@ -25,7 +24,10 @@ import { ErrorComponent } from './components/error/error.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormMortgageComponent,
+    MortgageAmortizationTableComponent,
+    AmortizationSimulatorComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
