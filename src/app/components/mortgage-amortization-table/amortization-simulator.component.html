@@ -1,0 +1,23 @@
+<div class="simulator-container" *ngIf="formData">
+  <h2>Simulador de Amortización</h2>
+  <p>Estás en la cuota número: <strong>{{ formData.selectedInstallment.period }}</strong></p>
+  <p>Capital pendiente actual: <strong>{{ formData.selectedInstallment.remainingCapital | currency:'EUR' }}</strong></p>
+
+  <div class="input-group">
+    <label for="extraPayment">Amortización extra (pago único):</label>
+    <input type="number" id="extraPayment" [(ngModel)]="extraPayment" (input)="calculateSimulation()" placeholder="Cantidad a amortizar">
+  </div>
+
+  <div class="results" *ngIf="periodsReduced !== null">
+    <h3>Resultado de la simulación</h3>
+    <p>Cuotas reducidas: <strong>{{ periodsReduced | number:'1.0-1' }} meses</strong></p>
+    <hr>
+    <p>Intereses restantes (actual): <strong>{{ interestBefore | currency:'EUR' }}</strong></p>
+    <p>Intereses restantes (tras amortización): <strong>{{ interestAfter | currency:'EUR' }}</strong></p>
+    <p><strong>Ahorro total en intereses: {{ interestSavings | currency:'EUR' }}</strong></p>
+  </div>
+
+  <div class="actions">
+    <button (click)="goBack()">Volver a la tabla</button>
+  </div>
+</div>

@@ -1,21 +1,23 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 @Component({
     selector: 'app-form-mortgage',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './form-mortgage.component.html',
-    styleUrls: ['./form-mortgage.component.sass'],
-    standalone: false
+    styleUrls: ['./form-mortgage.component.sass']
 })
-export class FormMortgageComponent implements OnInit {
+export class FormMortgageComponent {
 
-  mortgageForm: UntypedFormGroup;
+  mortgageForm: FormGroup;
 
   constructor(
-    @Inject(UntypedFormBuilder) private fb: UntypedFormBuilder,
-    @Inject(Router) private router: Router,
+    private fb: FormBuilder,
+    private router: Router,
     private mortgageService: MortgageService
   ) {
     this.mortgageForm = this.fb.group({
@@ -24,9 +26,6 @@ export class FormMortgageComponent implements OnInit {
       years: [25, [Validators.required, Validators.min(1)]], // Minimum 1 year
       periodsPerYear: [12, [Validators.required, Validators.min(1)]], // Minimum 1 period
     });
-  }
-
-  ngOnInit(): void {
   }
 
   submitForm(): void {
