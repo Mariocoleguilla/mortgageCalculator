@@ -1,12 +1,23 @@
-<header>
+<button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isSidebarOpen">
+  {{ isSidebarOpen ? '✕' : '☰' }}
+</button>
+
+<app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="isSidebarOpen = false"></app-sidebar>
+
+<div class="main-layout" [class.sidebar-open]="isSidebarOpen">
+  <header>
     <app-header></app-header>
-</header>
-<nav>
+  </header>
+
+  <nav>
     <app-navbar></app-navbar>
-</nav>
-<section>
+  </nav>
+
+  <main class="content-area">
     <router-outlet></router-outlet>
-</section>
-<footer>
+  </main>
+
+  <footer>
     <app-footer></app-footer>
-</footer>
+  </footer>
+</div>

@@ -1,0 +1,20 @@
+<button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isOpen">
+  {{ isOpen ? '✕' : '☰' }}
+</button>
+
+<nav class="sidebar" [class.open]="isOpen">
+  <div class="sidebar-header">
+    <h3>🏦 Mortgage Pro</h3>
+  </div>
+  <ul class="nav-list">
+    <li>
+      <a routerLink="/home" routerLinkActive="active" (click)="toggleSidebar()" class="nav-link">📊 Calculadora</a>
+    </li>
+    <li>
+      <a routerLink="/table" routerLinkActive="active" (click)="toggleSidebar()" class="nav-link">📋 Tabla Amortización</a>
+    </li>
+    <li>
+      <a routerLink="/simulator" routerLinkActive="active" (click)="toggleSidebar()" class="nav-link">📉 Simulador de Ahorro</a>
+    </li>
+  </ul>
+</nav>

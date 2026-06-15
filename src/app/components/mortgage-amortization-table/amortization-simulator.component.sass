@@ -1,3 +1,5 @@
+@use "sass:color"
+
 $primary-color: #4caf50
 $font-color: #333
 $border-color: #ccc
@@ -48,4 +50,4 @@ $border-color: #ccc
     margin-top: 20px
 
     &:hover
-      background-color: darken($primary-color, 10%)
+      background-color: color.adjust($primary-color, $lightness: -10%)

@@ -6,4 +6,10 @@ import { Component } from '@angular/core';
     styleUrls: ['./app.component.sass'],
     standalone: false
 })
-export class AppComponent {}
+export class AppComponent {
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+}
