@@ -33,7 +33,7 @@ export class RecurringAmortizationSimulatorComponent implements OnInit {
     }
   }
 
-  calculateRecurringSimulation(): void {
+calculateRecurringSimulation(): void {
     const principal = this.formData.remainingCapital;
     const annualRate = this.formData.interestRate;
     const years = this.formData.remainingYears;
@@ -44,23 +44,34 @@ export class RecurringAmortizationSimulatorComponent implements OnInit {
     const totalOriginalPeriods = (years * periodsPerYear) + months;
     const ratePerPeriod = annualRate / 100 / periodsPerYear;
 
+    let localOriginalMonthlyFee: number;
+
     if (ratePerPeriod === 0) {
-      this.originalMonthlyFee = principal / totalOriginalPeriods;
+      localOriginalMonthlyFee = principal / totalOriginalPeriods;
     } else {
-      this.originalMonthlyFee = (principal * ratePerPeriod * Math.pow(1 + ratePerPeriod, totalOriginalPeriods)) / (Math.pow(1 + ratePerPeriod, totalOriginalPeriods) - 1);
+      localOriginalMonthlyFee = (principal * ratePerPeriod * Math.pow(1 + ratePerPeriod, totalOriginalPeriods)) / (Math.pow(1 + ratePerPeriod, totalOriginalPeriods) - 1);
     }
 
+    this.originalMonthlyFee = localOriginalMonthlyFee;
     this.originalTotalPayments = totalOriginalPeriods;
-    this.originalTotalInterest = (this.originalMonthlyFee * totalOriginalPeriods) - principal;
+    
+    const localOriginalTotalInterest = (localOriginalMonthlyFee * totalOriginalPeriods) - principal;
+    this.originalTotalInterest = localOriginalTotalInterest;
 
-    this.newMonthlyFee = this.originalMonthlyFee + monthlyExtraPayment;
-    const numerator = Math.log(this.newMonthlyFee / (this.newMonthlyFee - principal * ratePerPeriod));
+    const localNewMonthlyFee = localOriginalMonthlyFee + monthlyExtraPayment;
+    this.newMonthlyFee = localNewMonthlyFee;
+
+    const numerator = Math.log(localNewMonthlyFee / (localNewMonthlyFee - principal * ratePerPeriod));
     const denominator = Math.log(1 + ratePerPeriod);
-    this.newTotalPayments = numerator / denominator;
-    this.newTotalInterest = (this.newMonthlyFee * this.newTotalPayments) - principal;
+    
+    const localNewTotalPayments = numerator / denominator;
+    this.newTotalPayments = localNewTotalPayments;
 
-    this.periodsReduced = totalOriginalPeriods - this.newTotalPayments;
-    this.interestSavings = this.originalTotalInterest - this.newTotalInterest;
+    const localNewTotalInterest = (localNewMonthlyFee * localNewTotalPayments) - principal;
+    this.newTotalInterest = localNewTotalInterest;
+
+    this.periodsReduced = totalOriginalPeriods - localNewTotalPayments;
+    this.interestSavings = localOriginalTotalInterest - localNewTotalInterest;
   }
 
   goBack(): void {

@@ -12,4 +12,12 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent { // La clase debe cerrarse correctamente
   @Input() isOpen = false;
   @Output() closeSidebar = new EventEmitter<void>();
+
+toggleSidebar(): void {
+    this.isOpen = !this.isOpen;
+  
+    if (!this.isOpen) {
+      this.closeSidebar.emit();
+    }
+  }
 }
