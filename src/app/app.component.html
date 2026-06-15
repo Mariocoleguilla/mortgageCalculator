@@ -1,11 +1,10 @@
-<button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isSidebarOpen">
-  {{ isSidebarOpen ? '✕' : '☰' }}
-</button>
-
 <app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="isSidebarOpen = false"></app-sidebar>
 
 <div class="main-layout" [class.sidebar-open]="isSidebarOpen">
-  <header>
+  <header class="app-header-bar">
+    <button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isSidebarOpen">
+      {{ isSidebarOpen ? '✕' : '☰' }}
+    </button>
     <app-header></app-header>
   </header>
 

@@ -1,0 +1,46 @@
+.main-layout
+  min-height: 100vh
+  display: flex
+  flex-direction: column
+  transition: transform 0.3s ease-in-out
+  position: relative
+  background-color: #f8fafc
+
+  &.sidebar-open
+    transform: translateX(250px)
+
+.content-area
+  flex: 1
+  padding: 2rem
+
+
+.app-header-bar
+  display: flex
+  align-items: center
+  padding: 1rem 2rem
+  background-color: #ffffff
+  border-bottom: 1px solid #e2e8f0
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05)
+  gap: 1.5rem
+
+.hamburger-menu
+  background-color: #f1f5f9
+  border: none
+  border-radius: 8px
+  width: 40px
+  height: 40px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.25rem
+  cursor: pointer
+  transition: all 0.2s ease-in-out
+  color: #334155
+
+  &:hover
+    background-color: #e2e8f0
+    color: #0f172a
+    transform: scale(1.05)
+
+  &:active
+    transform: scale(0.95)
