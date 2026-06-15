@@ -15,6 +15,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { OutstandingMortgageFormComponent } from './components/outstanding-mortgage-form/outstanding-mortgage-form.component';
 import { RecurringAmortizationFormComponent } from './components/recurring-amortization-form/recurring-amortization-form.component';
 import { RecurringAmortizationSimulatorComponent } from './components/recurring-amortization-simulator/recurring-amortization-simulator.component';
+import { FeaturesComponent } from './components/features/features.component';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { RecurringAmortizationSimulatorComponent } from './components/recurring-
     OutstandingMortgageFormComponent,
     RecurringAmortizationFormComponent,
     RecurringAmortizationSimulatorComponent,
-    SidebarComponent
+    SidebarComponent,
+    FeaturesComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

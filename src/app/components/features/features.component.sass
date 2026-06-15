@@ -1,0 +1,74 @@
+.features-page
+  max-width: 900px
+  margin: 0 auto
+  padding: 2.5rem 1.5rem
+
+.features-header
+  text-align: center
+  margin-bottom: 2.5rem
+
+  h2
+    font-size: 2rem
+    font-weight: 700
+    color: #0f172a
+    margin: 0 0 0.5rem
+
+  .subtitle
+    font-size: 1rem
+    color: #64748b
+    margin: 0
+
+.features-grid
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+  gap: 1.5rem
+
+.feature-card
+  background: #ffffff
+  border: 1px solid #e2e8f0
+  border-radius: 16px
+  padding: 2rem
+  cursor: pointer
+  transition: all 0.25s ease-in-out
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05)
+
+  &:hover
+    transform: translateY(-4px)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+    border-color: #cbd5e1
+
+.feature-icon
+  font-size: 2.5rem
+  line-height: 1
+
+.feature-title
+  font-size: 1.2rem
+  font-weight: 700
+  color: #0f172a
+  margin: 0
+
+.feature-description
+  font-size: 0.9rem
+  color: #64748b
+  line-height: 1.6
+  flex: 1
+  margin: 0
+
+.feature-btn
+  display: inline-block
+  margin-top: 0.5rem
+  padding: 0.6rem 1.2rem
+  color: #ffffff
+  border: none
+  border-radius: 8px
+  font-size: 0.9rem
+  font-weight: 600
+  cursor: pointer
+  transition: opacity 0.2s ease-in-out
+  align-self: flex-start
+
+  &:hover
+    opacity: 0.85

@@ -5,7 +5,8 @@
     <div>
       <label for="remainingCapital">Capital Pendiente:</label>
       <input id="remainingCapital" type="number" formControlName="remainingCapital" placeholder="Ej: 100000">
-      <small *ngIf="outstandingMortgageForm.get('remainingCapital')?.invalid && outstandingMortgageForm.get('remainingCapital')?.touched">
+      <small
+        (ngIf)="outstandingMortgageForm.get('remainingCapital')?.invalid && outstandingMortgageForm.get('remainingCapital')?.touched">
         El capital pendiente es obligatorio y debe ser al menos 1000.
       </small>
     </div>
@@ -13,7 +14,8 @@
     <div>
       <label for="remainingYears">Años Pendientes:</label>
       <input id="remainingYears" type="number" formControlName="remainingYears" placeholder="Ej: 10">
-      <small *ngIf="outstandingMortgageForm.get('remainingYears')?.invalid && outstandingMortgageForm.get('remainingYears')?.touched">
+      <small
+        (ngIf)="outstandingMortgageForm.get('remainingYears')?.invalid && outstandingMortgageForm.get('remainingYears')?.touched">
         Los años pendientes son obligatorios y no pueden ser negativos.
       </small>
     </div>
@@ -21,7 +23,8 @@
     <div>
       <label for="remainingMonths">Meses Pendientes:</label>
       <input id="remainingMonths" type="number" formControlName="remainingMonths" placeholder="Ej: 6">
-      <small *ngIf="outstandingMortgageForm.get('remainingMonths')?.invalid && outstandingMortgageForm.get('remainingMonths')?.touched">
+      <small
+        (ngIf)="outstandingMortgageForm.get('remainingMonths')?.invalid && outstandingMortgageForm.get('remainingMonths')?.touched">
         Los meses pendientes son obligatorios y deben estar entre 0 y 11.
       </small>
     </div>
@@ -29,7 +32,8 @@
     <div>
       <label for="interestRate">Tipo de Interés (%):</label>
       <input id="interestRate" type="number" formControlName="interestRate" placeholder="Ej: 2.5">
-      <small *ngIf="outstandingMortgageForm.get('interestRate')?.invalid && outstandingMortgageForm.get('interestRate')?.touched">
+      <small
+        (ngIf)="outstandingMortgageForm.get('interestRate')?.invalid && outstandingMortgageForm.get('interestRate')?.touched">
         El tipo de interés es obligatorio y debe estar entre 0 y 100.
       </small>
     </div>

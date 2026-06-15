@@ -1,0 +1,19 @@
+<div class="features-page">
+  <div class="features-header">
+    <h2>¿Qué quieres analizar?</h2>
+    <p class="subtitle">Selecciona una herramienta para analizar tu hipoteca</p>
+  </div>
+
+  <div class="features-grid">
+    @for (feature of features; track feature.id) {
+      <div class="feature-card" (click)="navigateTo(feature.route)" [id]="'feature-' + feature.id">
+        <div class="feature-icon" [style.color]="feature.color">{{ feature.icon }}</div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-description">{{ feature.description }}</p>
+        <button class="feature-btn" [style.background-color]="feature.color">
+          Acceder →
+        </button>
+      </div>
+    }
+  </div>
+</div>

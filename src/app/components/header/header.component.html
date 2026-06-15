@@ -1,1 +1,22 @@
-<h1>Mortgage Calculator</h1>
+<div class="header-content">
+  <h1 class="header-title" (click)="goHome()" title="Ir al inicio">Mortgage Calculator</h1>
+
+  @if (mortgageData) {
+    <div class="mortgage-summary" title="Haz clic para editar los datos" (click)="goHome()">
+      <span class="summary-item">
+        <span class="summary-label">Capital</span>
+        <span class="summary-value">{{ formatAmount(mortgageData.amount) }} €</span>
+      </span>
+      <span class="summary-divider">|</span>
+      <span class="summary-item">
+        <span class="summary-label">Interés</span>
+        <span class="summary-value">{{ mortgageData.interestRate }}%</span>
+      </span>
+      <span class="summary-divider">|</span>
+      <span class="summary-item">
+        <span class="summary-label">Plazo</span>
+        <span class="summary-value">{{ mortgageData.years }} años</span>
+      </span>
+    </div>
+  }
+</div>

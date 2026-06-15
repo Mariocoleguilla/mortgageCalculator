@@ -1,5 +1,59 @@
+.header-content
+  display: flex
+  align-items: center
+  gap: 1.5rem
+  width: 100%
+  flex-wrap: wrap
+
 h1
   margin: 0
-  font-size: 1.5rem
+  font-size: 1.25rem
   font-weight: 700
   color: #0f172a
+  cursor: pointer
+  white-space: nowrap
+  flex-shrink: 0
+
+  &:hover
+    color: #4caf50
+
+.mortgage-summary
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  background: #f1f5f9
+  border: 1px solid #e2e8f0
+  border-radius: 999px
+  padding: 0.35rem 1rem
+  cursor: pointer
+  transition: all 0.2s ease-in-out
+  flex-wrap: wrap
+
+  &:hover
+    background: #e2e8f0
+    border-color: #94a3b8
+
+.summary-item
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 0
+
+.summary-label
+  font-size: 0.65rem
+  color: #64748b
+  font-weight: 500
+  text-transform: uppercase
+  letter-spacing: 0.04em
+  line-height: 1
+
+.summary-value
+  font-size: 0.85rem
+  font-weight: 700
+  color: #0f172a
+  line-height: 1.2
+
+.summary-divider
+  color: #cbd5e1
+  font-size: 1rem
+  margin: 0 0.1rem

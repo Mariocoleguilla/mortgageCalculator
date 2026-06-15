@@ -1,71 +1,126 @@
 @use "sass:color"
 
-// Variables personalizables
-$primary-color: #4caf50  // Color principal
-$error-color: #f44336    // Color para los mensajes de error
-$input-border-color: #ccc
+$primary-color: #4caf50
+$error-color: #ef4444
+$input-border-color: #e2e8f0
 $input-border-focus-color: $primary-color
-$label-color: #333
+$label-color: #374151
 
-// Estilos del formulario
-form
-  max-width: 500px // Mantiene el ancho máximo
-  margin: 3rem auto // Más margen superior/inferior para separación
-  padding: 2rem // Aumenta el padding interno
-  border: 1px solid color.adjust($input-border-color, $lightness: 15%) // Borde ligeramente más suave
-  border-radius: 10px // Esquinas más redondeadas
-  background-color: #ffffff // Fondo blanco puro para mayor contraste
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) // Sombra más pronunciada pero suave
+.form-page
+  max-width: 560px
+  margin: 0 auto
+  padding: 2.5rem 1.5rem
+
+.form-intro
+  text-align: center
+  margin-bottom: 2rem
+
+  h2
+    font-size: 1.75rem
+    font-weight: 700
+    color: #0f172a
+    margin: 0 0 0.5rem
+
+  .subtitle
+    font-size: 0.95rem
+    color: #64748b
+    margin: 0
+
+.warning-banner
+  display: flex
+  align-items: center
+  gap: 0.75rem
+  padding: 0.875rem 1rem
+  background-color: #fef3c7
+  border: 1px solid #f59e0b
+  border-radius: 10px
+  color: #92400e
+  font-size: 0.9rem
+  margin-bottom: 1.5rem
+
+  .warning-icon
+    font-size: 1.1rem
+    flex-shrink: 0
+
+  .warning-close
+    margin-left: auto
+    background: none
+    border: none
+    cursor: pointer
+    font-size: 0.9rem
+    color: #92400e
+    padding: 0 0.25rem
+    flex-shrink: 0
+
+    &:hover
+      opacity: 0.7
+
+.mortgage-form
+  background: #ffffff
+  border: 1px solid $input-border-color
+  border-radius: 16px
+  padding: 2rem
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07)
+
+.form-field
+  margin-bottom: 1.5rem
 
   label
     display: block
-    margin-bottom: 0.5rem
+    margin-bottom: 0.4rem
     font-weight: 600
     color: $label-color
-    font-size: 0.95rem // Ligeramente más pequeño para etiquetas
+    font-size: 0.9rem
 
   input
     width: 100%
-    padding: 0.5rem
-    border: 1px solid $input-border-color
-    border-radius: 4px
+    padding: 0.65rem 0.875rem
+    border: 1.5px solid $input-border-color
+    border-radius: 8px
     font-size: 1rem
     outline: none
-    transition: border-color 0.3s
+    transition: border-color 0.2s
+    box-sizing: border-box
+    color: #0f172a
+    background: #f8fafc
 
     &:focus
       border-color: $input-border-focus-color
+      background: #ffffff
+
+.field-error
+  margin-top: 0.3rem
 
   small
     display: block
-    margin-top: 0.25rem
     color: $error-color
-    font-size: 0.875rem
+    font-size: 0.8rem
 
-  div
-    margin-bottom: 1.75rem // Más espacio entre campos
+.submit-btn
+  display: block
+  width: 100%
+  margin-top: 0.5rem
+  padding: 0.875rem
+  font-size: 1rem
+  font-weight: 700
+  text-align: center
+  color: #fff
+  background-color: $primary-color
+  border: none
+  border-radius: 10px
+  cursor: pointer
+  transition: all 0.2s ease-in-out
 
-    &:last-of-type
-      margin-bottom: 0
+  &:hover
+    background-color: color.adjust($primary-color, $lightness: -8%)
+    transform: translateY(-1px)
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35)
 
-  button
-    display: block // Cambia a bloque para permitir margin: auto
-    width: 200px // Ancho fijo para el botón
-    margin: 1.5rem auto // Centra el botón horizontalmente y añade margen superior
-    padding: 0.75rem
-    font-size: 1rem
-    font-weight: bold
-    text-align: center // Centra el texto dentro del botón
-    color: #fff
-    background-color: $primary-color
-    border: none
-    border-radius: 4px
-    cursor: pointer
-    transition: background-color 0.3s
+  &:active
+    transform: translateY(0)
 
-    &:hover
-      background-color: color.adjust($primary-color, $lightness: -10%)
-
-    &:disabled
-      background-color: color.adjust($primary-color, $lightness: 30%)
-      cursor: not-allowed
+  &:disabled
+    background-color: #94a3b8
+    cursor: not-allowed
+    transform: none
+    box-shadow: none

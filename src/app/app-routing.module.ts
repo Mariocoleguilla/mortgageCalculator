@@ -7,6 +7,8 @@ import { AmortizationSimulatorComponent } from './components/mortgage-amortizati
 import { OutstandingMortgageFormComponent } from './components/outstanding-mortgage-form/outstanding-mortgage-form.component';
 import { RecurringAmortizationFormComponent } from './components/recurring-amortization-form/recurring-amortization-form.component';
 import { RecurringAmortizationSimulatorComponent } from './components/recurring-amortization-simulator/recurring-amortization-simulator.component';
+import { FeaturesComponent } from './components/features/features.component';
+import { mortgageDataGuard } from './guards/mortgage-data.guard';
 
 const routes: Routes = [
   {
@@ -14,24 +16,33 @@ const routes: Routes = [
     component: FormMortgageComponent
   },
   {
+    path: 'features',
+    component: FeaturesComponent
+  },
+  {
     path: 'table',
-    component: MortgageAmortizationTableComponent
+    component: MortgageAmortizationTableComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: 'simulator',
-    component: AmortizationSimulatorComponent
+    component: AmortizationSimulatorComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: 'outstanding-mortgage-form',
-    component: OutstandingMortgageFormComponent
+    component: OutstandingMortgageFormComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: 'recurring-amortization-form',
-    component: RecurringAmortizationFormComponent
+    component: RecurringAmortizationFormComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: 'recurring-simulator',
-    component: RecurringAmortizationSimulatorComponent
+    component: RecurringAmortizationSimulatorComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: '',

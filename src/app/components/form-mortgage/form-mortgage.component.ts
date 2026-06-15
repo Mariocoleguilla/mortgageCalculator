@@ -15,6 +15,7 @@ export class FormMortgageComponent implements OnInit {
 
   mortgageForm: FormGroup;
   formattedAmount: string = '';
+  showWarning = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,17 +23,30 @@ export class FormMortgageComponent implements OnInit {
     private mortgageService: MortgageService
   ) {
     this.mortgageForm = this.fb.group({
-      amount: [138400, [Validators.required, Validators.min(1000)]], // Minimum amount to finance
-      interestRate: [2.45, [Validators.required, Validators.min(0), Validators.max(100)]], // TIN as a percentage
-      years: [25, [Validators.required, Validators.min(1)]], // Minimum 1 year
-      periodsPerYear: [12, [Validators.required, Validators.min(1)]], // Minimum 1 period
+      amount: [null, [Validators.required, Validators.min(1000)]],
+      interestRate: [null, [Validators.required, Validators.min(0), Validators.max(100)]],
+      years: [null, [Validators.required, Validators.min(1)]],
+      periodsPerYear: [12, [Validators.required, Validators.min(1)]],
     });
   }
 
   ngOnInit(): void {
-    const initialAmount = this.mortgageForm.get('amount')?.value;
-    if (initialAmount) {
-      this.formattedAmount = this.formatNumber(initialAmount);
+    // Show warning if redirected from a protected route
+    if (this.mortgageService.needsMortgageDataWarning) {
+      this.showWarning = true;
+      this.mortgageService.needsMortgageDataWarning = false;
+    }
+
+    // Load existing data from session if available
+    const existing = this.mortgageService.formData.value;
+    if (existing && existing.amount) {
+      this.mortgageForm.patchValue({
+        amount: existing.amount,
+        interestRate: existing.interestRate,
+        years: existing.years,
+        periodsPerYear: existing.periodsPerYear ?? 12,
+      });
+      this.formattedAmount = this.formatNumber(existing.amount);
     }
   }
 
@@ -40,7 +54,7 @@ export class FormMortgageComponent implements OnInit {
     if (value === null || value === undefined || value === '') return '';
     const cleanValue = value.toString().replace(/\D/g, '');
     if (!cleanValue) return '';
-    return Number(cleanValue).toLocaleString('de-DE'); // 'de-DE' uses dots for thousands separation
+    return Number(cleanValue).toLocaleString('de-DE');
   }
 
   onAmountInput(event: any): void {
@@ -84,6 +98,6 @@ export class FormMortgageComponent implements OnInit {
   submitForm(): void {
     const formData = this.mortgageForm.value;
     this.mortgageService.setFormData(formData);
-    this.router.navigate(["table"]);
+    this.router.navigate(['/features']);
   }
 }
