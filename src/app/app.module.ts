@@ -10,7 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ErrorComponent } from './components/error/error.component';
-import { AmortizationSimulatorComponent } from './components/mortgage-amortization-table/amortization-simulator.component';
+import { AmortizationSimulatorComponent } from './components/amortization-simulator.component/amortization-simulator.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { OutstandingMortgageFormComponent } from './components/outstanding-mortgage-form/outstanding-mortgage-form.component';
 import { RecurringAmortizationFormComponent } from './components/recurring-amortization-form/recurring-amortization-form.component';

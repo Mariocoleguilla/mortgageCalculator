@@ -1,7 +1,8 @@
 <div class="simulator-container">
   <h2>Resultados del Simulador de Amortización Recurrente</h2>
 
-  <div (ngIf)="formData">
+  @if(formData) {
+  <div>
     <p><strong>Capital Pendiente Inicial:</strong> {{ formData.remainingCapital | currency:'EUR':'symbol':'1.2-2' }}</p>
     <p><strong>Tipo de Interés Anual:</strong> {{ formData.interestRate | number:'1.2-2' }}%</p>
     <p><strong>Años y Meses Pendientes Originales:</strong> {{ formData.remainingYears }} años y {{
@@ -47,9 +48,10 @@
 
     <button (click)="goBack()">Volver al Formulario</button>
   </div>
-
-  <div (ngIf)="!formData">
+  } @else if (!formData) {
+  <div>
     <p>No hay datos para mostrar la simulación. Por favor, complete el formulario.</p>
     <button (click)="router.navigate(['/'])">Ir al Inicio</button>
   </div>
+  }
 </div>
