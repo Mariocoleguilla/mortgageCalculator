@@ -4,8 +4,10 @@
     <label for="amount">Amount to Finance</label>
     <input
       id="amount"
-      type="number"
-      formControlName="amount"
+      type="text"
+      [value]="formattedAmount"
+      (input)="onAmountInput($event)"
+      (blur)="onAmountBlur()"
       placeholder="Enter the amount"
       />
     @if (mortgageForm.get('amount')?.invalid && mortgageForm.get('amount')?.touched) {
