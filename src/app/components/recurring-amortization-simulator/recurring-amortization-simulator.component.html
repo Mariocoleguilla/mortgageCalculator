@@ -1,0 +1,53 @@
+<div class="simulator-container">
+  <h2>Resultados del Simulador de Amortización Recurrente</h2>
+
+  <div *ngIf="formData">
+    <p><strong>Capital Pendiente Inicial:</strong> {{ formData.remainingCapital | currency:'EUR':'symbol':'1.2-2' }}</p>
+    <p><strong>Tipo de Interés Anual:</strong> {{ formData.interestRate | number:'1.2-2' }}%</p>
+    <p><strong>Años y Meses Pendientes Originales:</strong> {{ formData.remainingYears }} años y {{ formData.remainingMonths }} meses</p>
+    <p><strong>Pago Extra Mensual Recurrente:</strong> {{ formData.monthlyExtraPayment | currency:'EUR':'symbol':'1.2-2' }}</p>
+
+    <h3>Resumen de la Simulación</h3>
+    <div class="results-summary">
+      <div class="result-card">
+        <h4>Cuota Mensual Original</h4>
+        <p>{{ originalMonthlyFee | currency:'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="result-card">
+        <h4>Nueva Cuota Mensual</h4>
+        <p>{{ newMonthlyFee | currency:'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="result-card">
+        <h4>Total de Pagos Originales (Meses)</h4>
+        <p>{{ originalTotalPayments | number:'1.0-0' }}</p>
+      </div>
+      <div class="result-card">
+        <h4>Nuevo Total de Pagos (Meses)</h4>
+        <p>{{ newTotalPayments | number:'1.0-0' }}</p>
+      </div>
+      <div class="result-card">
+        <h4>Intereses Totales Originales</h4>
+        <p>{{ originalTotalInterest | currency:'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="result-card">
+        <h4>Nuevos Intereses Totales</h4>
+        <p>{{ newTotalInterest | currency:'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="result-card savings">
+        <h4>Ahorro Total en Intereses</h4>
+        <p>{{ interestSavings | currency:'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+      <div class="result-card savings">
+        <h4>Periodos Reducidos (Meses)</h4>
+        <p>{{ periodsReduced | number:'1.0-0' }}</p>
+      </div>
+    </div>
+
+    <button (click)="goBack()">Volver al Formulario</button>
+  </div>
+
+  <div *ngIf="!formData">
+    <p>No hay datos para mostrar la simulación. Por favor, complete el formulario.</p>
+    <button (click)="router.navigate(['/'])">Ir al Inicio</button>
+  </div>
+</div>

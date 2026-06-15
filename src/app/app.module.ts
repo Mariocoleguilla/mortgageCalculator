@@ -11,6 +11,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ErrorComponent } from './components/error/error.component';
 import { AmortizationSimulatorComponent } from './components/mortgage-amortization-table/amortization-simulator.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { OutstandingMortgageFormComponent } from './components/outstanding-mortgage-form/outstanding-mortgage-form.component';
+import { RecurringAmortizationFormComponent } from './components/recurring-amortization-form/recurring-amortization-form.component';
+import { RecurringAmortizationSimulatorComponent } from './components/recurring-amortization-simulator/recurring-amortization-simulator.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +31,11 @@ import { AmortizationSimulatorComponent } from './components/mortgage-amortizati
     ReactiveFormsModule,
     FormMortgageComponent,
     MortgageAmortizationTableComponent,
-    AmortizationSimulatorComponent
+    AmortizationSimulatorComponent,
+    OutstandingMortgageFormComponent,
+    RecurringAmortizationFormComponent,
+    RecurringAmortizationSimulatorComponent,
+    SidebarComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
