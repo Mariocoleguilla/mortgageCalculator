@@ -132,7 +132,10 @@
         <div class="result-card time">
           <span class="result-icon">⏱️</span>
           <span class="result-label">Cuotas reducidas</span>
-          <span class="result-value">{{ periodsReduced | number:'1.0-1' }} meses</span>
+          <span class="result-value">
+            {{ periodsReduced | number:'1.0-1' }} meses
+            <span class="result-subvalue">({{ periodsReduced / 12 | number:'1.0-2' }} años)</span>
+          </span>
         </div>
         <div class="result-card interest">
           <span class="result-icon">📉</span>
