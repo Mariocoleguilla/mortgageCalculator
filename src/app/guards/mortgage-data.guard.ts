@@ -10,6 +10,6 @@ export const mortgageDataGuard: CanActivateFn = () => {
     return true;
   }
 
-  mortgageService.needsMortgageDataWarning = true;
+  mortgageService.setNeedsMortgageDataWarning(true);
   return router.createUrlTree(['/home']);
 };

@@ -32,6 +32,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home']);
   }
 
+  clearMortgage(event: Event): void {
+    event.stopPropagation();
+    this.mortgageService.clearFormData();
+    this.router.navigate(['/home']);
+  }
+
   formatAmount(amount: number): string {
     return amount?.toLocaleString('de-DE') ?? '';
   }

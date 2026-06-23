@@ -18,7 +18,8 @@ const routes: Routes = [
   },
   {
     path: 'features',
-    component: FeaturesComponent
+    component: FeaturesComponent,
+    canActivate: [mortgageDataGuard]
   },
   {
     path: 'table',

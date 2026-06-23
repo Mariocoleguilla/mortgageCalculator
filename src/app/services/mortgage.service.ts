@@ -12,8 +12,13 @@ export class MortgageService {
   private _hasMortgageData = new BehaviorSubject<boolean>(false);
   hasMortgageData$ = this._hasMortgageData.asObservable();
 
-  // Flag to show a warning when redirected from a protected route
-  needsMortgageDataWarning = false;
+  // Subject to show a warning when redirected from a protected route
+  private _needsMortgageDataWarning = new BehaviorSubject<boolean>(false);
+  needsMortgageDataWarning$ = this._needsMortgageDataWarning.asObservable();
+
+  setNeedsMortgageDataWarning(value: boolean) {
+    this._needsMortgageDataWarning.next(value);
+  }
 
   // Which simulator to navigate to when the user selects a table row
   // 'one-time' → /simulator | 'recurring' → /recurring-simulator | null → /simulator (default)

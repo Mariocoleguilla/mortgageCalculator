@@ -17,6 +17,9 @@
         <span class="summary-label">Plazo</span>
         <span class="summary-value">{{ mortgageData.years }} años</span>
       </span>
+      <button class="clear-mortgage-btn" title="Borrar hipoteca" (click)="clearMortgage($event)">
+        &times;
+      </button>
     </div>
   }
 </div>

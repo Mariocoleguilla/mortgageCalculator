@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-form-mortgage',
@@ -11,11 +12,12 @@ import { MortgageService } from 'src/app/services/mortgage.service';
     templateUrl: './form-mortgage.component.html',
     styleUrls: ['./form-mortgage.component.sass']
 })
-export class FormMortgageComponent implements OnInit {
+export class FormMortgageComponent implements OnInit, OnDestroy {
 
   mortgageForm: FormGroup;
   formattedAmount: string = '';
   showWarning = false;
+  private warningSubscription!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +34,12 @@ export class FormMortgageComponent implements OnInit {
 
   ngOnInit(): void {
     // Show warning if redirected from a protected route
-    if (this.mortgageService.needsMortgageDataWarning) {
-      this.showWarning = true;
-      this.mortgageService.needsMortgageDataWarning = false;
-    }
+    this.warningSubscription = this.mortgageService.needsMortgageDataWarning$.subscribe(show => {
+      if (show) {
+        this.showWarning = true;
+        this.mortgageService.setNeedsMortgageDataWarning(false);
+      }
+    });
 
     // Load existing data from session if available
     const existing = this.mortgageService.formData.value;
@@ -99,5 +103,9 @@ export class FormMortgageComponent implements OnInit {
     const formData = this.mortgageForm.value;
     this.mortgageService.setFormData(formData);
     this.router.navigate(['/features']);
+  }
+
+  ngOnDestroy(): void {
+    this.warningSubscription?.unsubscribe();
   }
 }
