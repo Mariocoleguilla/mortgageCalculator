@@ -5,110 +5,84 @@
   </div>
 
   @if (showWarning) {
-    <div class="warning-banner" role="alert">
-      <span class="warning-icon">⚠️</span>
-      <span>Para acceder a esta función, primero debes introducir los datos de tu hipoteca.</span>
-      <button class="warning-close" (click)="showWarning = false">✕</button>
-    </div>
+  <div class="warning-banner" role="alert">
+    <span class="warning-icon">⚠️</span>
+    <span>Para acceder a esta función, primero debes introducir los datos de tu hipoteca.</span>
+    <button class="warning-close" (click)="showWarning = false">✕</button>
+  </div>
   }
 
   <form [formGroup]="mortgageForm" class="mortgage-form">
     <!-- Field: Amount -->
     <div class="form-field">
       <label for="amount">Importe a financiar</label>
-      <input
-        id="amount"
-        type="text"
-        [value]="formattedAmount"
-        (input)="onAmountInput($event)"
-        (blur)="onAmountBlur()"
-        placeholder="Ej: 138.400"
-        />
+      <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
+        placeholder="Ej: 140.000" />
       @if (mortgageForm.get('amount')?.invalid && mortgageForm.get('amount')?.touched) {
-        <div class="field-error">
-          @if (mortgageForm.get('amount')?.errors?.['required']) {
-            <small>Este campo es obligatorio</small>
-          }
-          @if (mortgageForm.get('amount')?.errors?.['min']) {
-            <small>El importe mínimo es 1.000 €</small>
-          }
-        </div>
+      <div class="field-error">
+        @if (mortgageForm.get('amount')?.errors?.['required']) {
+        <small>Este campo es obligatorio</small>
+        }
+        @if (mortgageForm.get('amount')?.errors?.['min']) {
+        <small>El importe mínimo es 1.000 €</small>
+        }
+      </div>
       }
     </div>
 
     <!-- Field: Interest Rate -->
     <div class="form-field">
       <label for="interestRate">Tipo de interés (% TIN)</label>
-      <input
-        id="interestRate"
-        type="number"
-        formControlName="interestRate"
-        placeholder="Ej: 2,45"
-        step="0.01"
-        />
+      <input id="interestRate" type="number" formControlName="interestRate" placeholder="Ej: 2,50" step="0.01" />
       @if (mortgageForm.get('interestRate')?.invalid && mortgageForm.get('interestRate')?.touched) {
-        <div class="field-error">
-          @if (mortgageForm.get('interestRate')?.errors?.['required']) {
-            <small>Este campo es obligatorio</small>
-          }
-          @if (mortgageForm.get('interestRate')?.errors?.['min']) {
-            <small>Debe ser mayor o igual a 0</small>
-          }
-          @if (mortgageForm.get('interestRate')?.errors?.['max']) {
-            <small>Debe ser menor o igual a 100</small>
-          }
-        </div>
+      <div class="field-error">
+        @if (mortgageForm.get('interestRate')?.errors?.['required']) {
+        <small>Este campo es obligatorio</small>
+        }
+        @if (mortgageForm.get('interestRate')?.errors?.['min']) {
+        <small>Debe ser mayor o igual a 0</small>
+        }
+        @if (mortgageForm.get('interestRate')?.errors?.['max']) {
+        <small>Debe ser menor o igual a 100</small>
+        }
+      </div>
       }
     </div>
 
     <!-- Field: Years -->
     <div class="form-field">
       <label for="years">Plazo (años)</label>
-      <input
-        id="years"
-        type="number"
-        formControlName="years"
-        placeholder="Ej: 25"
-        />
+      <input id="years" type="number" formControlName="years" placeholder="Ej: 30" />
       @if (mortgageForm.get('years')?.invalid && mortgageForm.get('years')?.touched) {
-        <div class="field-error">
-          @if (mortgageForm.get('years')?.errors?.['required']) {
-            <small>Este campo es obligatorio</small>
-          }
-          @if (mortgageForm.get('years')?.errors?.['min']) {
-            <small>El plazo mínimo es 1 año</small>
-          }
-        </div>
+      <div class="field-error">
+        @if (mortgageForm.get('years')?.errors?.['required']) {
+        <small>Este campo es obligatorio</small>
+        }
+        @if (mortgageForm.get('years')?.errors?.['min']) {
+        <small>El plazo mínimo es 1 año</small>
+        }
+      </div>
       }
     </div>
 
     <!-- Field: Periods per year -->
     <div class="form-field">
       <label for="periodsPerYear">Periodos por año</label>
-      <input
-        id="periodsPerYear"
-        type="number"
-        formControlName="periodsPerYear"
-        placeholder="Ej: 12"
-        />
+      <input id="periodsPerYear" type="number" formControlName="periodsPerYear" placeholder="Ej: 12" value="12" />
       @if (mortgageForm.get('periodsPerYear')?.invalid && mortgageForm.get('periodsPerYear')?.touched) {
-        <div class="field-error">
-          @if (mortgageForm.get('periodsPerYear')?.errors?.['required']) {
-            <small>Este campo es obligatorio</small>
-          }
-          @if (mortgageForm.get('periodsPerYear')?.errors?.['min']) {
-            <small>Mínimo 1 periodo</small>
-          }
-        </div>
+      <div class="field-error">
+        @if (mortgageForm.get('periodsPerYear')?.errors?.['required']) {
+        <small>Este campo es obligatorio</small>
+        }
+        @if (mortgageForm.get('periodsPerYear')?.errors?.['min']) {
+        <small>Mínimo 1 periodo</small>
+        }
+      </div>
       }
     </div>
 
     <!-- Submit Button -->
-    <button
-      id="submit-mortgage-form"
-      class="submit-btn"
-      [disabled]="mortgageForm.invalid"
-      (click)="submitForm()">
+    <button id="submit-mortgage-form" class="submit-btn" [disabled]="mortgageForm.invalid" (click)="submitForm()">
       Ver herramientas →
     </button>
   </form>

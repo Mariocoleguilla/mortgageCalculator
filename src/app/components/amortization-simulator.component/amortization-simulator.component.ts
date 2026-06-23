@@ -32,9 +32,11 @@ export class AmortizationSimulatorComponent implements OnInit {
 
   // Manual mode
   manualRemainingCapital: number | null = null;
+  formattedManualCapital: string = '';
 
   // Extra payment (shared by both modes)
   extraPayment: number = 0;
+  formattedExtraPayment: string = '';
 
   // Computed simulation results
   periodsReduced: number | null = null;
@@ -138,10 +140,67 @@ export class AmortizationSimulatorComponent implements OnInit {
 
   onModeChange(): void {
     this.extraPayment = 0;
+    this.formattedExtraPayment = '';
+    this.manualRemainingCapital = null;
+    this.formattedManualCapital = '';
     this.clearResults();
   }
 
-  onInputChange(): void {
+  formatNumber(value: number | string): string {
+    if (value === null || value === undefined || value === '') return '';
+    const cleanValue = value.toString().replace(/\D/g, '');
+    if (!cleanValue) return '';
+    return Number(cleanValue).toLocaleString('de-DE');
+  }
+
+  handleNumericInput(event: any, callback: (numericValue: number) => void): string {
+    const inputElement = event.target;
+    const originalValue = inputElement.value;
+    const selectionStart = inputElement.selectionStart;
+
+    const cleanVal = originalValue.replace(/\D/g, '');
+    const numericValue = cleanVal ? parseInt(cleanVal, 10) : 0;
+
+    callback(numericValue);
+
+    const formatted = this.formatNumber(cleanVal);
+    inputElement.value = formatted;
+
+    let digitsBeforeCursor = 0;
+    for (let i = 0; i < selectionStart; i++) {
+      if (/\d/.test(originalValue[i])) {
+        digitsBeforeCursor++;
+      }
+    }
+
+    let newCursorPosition = 0;
+    let digitsCount = 0;
+    while (digitsCount < digitsBeforeCursor && newCursorPosition < formatted.length) {
+      if (/\d/.test(formatted[newCursorPosition])) {
+        digitsCount++;
+      }
+      newCursorPosition++;
+    }
+
+    inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
+    return formatted;
+  }
+
+  onManualCapitalInput(event: any): void {
+    this.formattedManualCapital = this.handleNumericInput(event, (val) => {
+      this.manualRemainingCapital = val || null;
+    });
+    this.runSimulation();
+  }
+
+  onExtraPaymentInput(event: any): void {
+    this.formattedExtraPayment = this.handleNumericInput(event, (val) => {
+      this.extraPayment = val;
+    });
+    this.runSimulation();
+  }
+
+  runSimulation(): void {
     if (this.extraPayment > 0) {
       this.calculateSimulation();
     } else {

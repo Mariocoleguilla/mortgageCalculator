@@ -78,8 +78,8 @@
   <div class="input-section">
     <label for="manualCapital" class="input-label">Capital pendiente por amortizar</label>
     <div class="input-wrapper">
-      <input type="number" id="manualCapital" [(ngModel)]="manualRemainingCapital" (input)="onInputChange()"
-        placeholder="Ej: 120.000" min="1" [max]="amount" />
+      <input type="text" id="manualCapital" [value]="formattedManualCapital" (input)="onManualCapitalInput($event)"
+        placeholder="Ej: 120.000" />
       <span class="input-unit">€</span>
     </div>
   </div>
@@ -90,8 +90,8 @@
   <div class="input-section">
     <label for="extraPayment" class="input-label">Amortización anticipada (pago único)</label>
     <div class="input-wrapper">
-      <input type="number" id="extraPayment" [(ngModel)]="extraPayment" (input)="onInputChange()"
-        placeholder="Cantidad a amortizar de golpe" min="0" [max]="activeCapital" />
+      <input type="text" id="extraPayment" [value]="formattedExtraPayment" (input)="onExtraPaymentInput($event)"
+        placeholder="Cantidad a amortizar de golpe" />
       <span class="input-unit">€</span>
     </div>
   </div>

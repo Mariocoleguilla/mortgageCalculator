@@ -32,9 +32,11 @@ export class RecurringSimulatorComponent implements OnInit {
 
   // Manual mode
   manualRemainingCapital: number | null = null;
+  formattedManualCapital: string = '';
 
   // Recurring extra payment per period
   monthlyExtraPayment: number = 0;
+  formattedMonthlyExtraPayment: string = '';
 
   // Simulation results
   newMonthlyFee: number | null = null;
