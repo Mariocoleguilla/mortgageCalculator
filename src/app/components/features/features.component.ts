@@ -27,7 +27,7 @@ export class FeaturesComponent implements OnInit {
       icon: '📉',
       title: 'Simulador de Amortización',
       description: 'Simula el impacto de una amortización anticipada sobre tu hipoteca y descubre cuánto puedes ahorrar en intereses.',
-      route: '/outstanding-mortgage-form',
+      route: '/simulator',
       color: '#2196f3'
     }
   ];

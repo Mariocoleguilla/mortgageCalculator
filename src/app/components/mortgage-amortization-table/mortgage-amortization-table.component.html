@@ -1,28 +1,49 @@
-<p>Cuota Mensual: {{this.monthlyFee | currency:'EUR':true}}</p>
-<p>Total intereses en {{this.formData.years}} años: {{this.totalFees | currency:'EUR':true}}</p>
-@if (this.tableData.length > 0) {
-  <table>
-    <thead>
-      <tr>
-        <th>Nº Cuota</th>
-        <th>Cuota</th>
-        <th>Interés</th>
-        <th>Capital</th>
-        <th>Amortización</th>
-        <th>Capital Restante</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of this.tableData; track row) {
-        <tr (click)="onRowClick(row)">
-          <td>{{row.period}}</td>
-          <td>{{row.monthlyFee | currency:'EUR':true}}</td>
-          <td>{{row.fees | currency:'EUR':true}}</td>
-          <td>{{row.capital | currency:'EUR':true}}</td>
-          <td>{{row.amortization | currency:'EUR':true}}</td>
-          <td>{{row.remainingCapital | currency:'EUR':true}}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-}
+<div class="table-page">
+
+  <!-- KPI summary strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <span class="kpi-label">Cuota mensual</span>
+      <span class="kpi-value">{{ this.monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</span>
+    </div>
+    <div class="kpi-card highlight">
+      <span class="kpi-label">Total intereses en {{ this.formData.years }} años</span>
+      <span class="kpi-value">{{ this.totalFees | currency:'EUR':'symbol':'1.2-2' }}</span>
+    </div>
+    <div class="kpi-hint">
+      <span class="kpi-hint-icon">💡</span>
+      Haz clic en cualquier fila para simular una amortización anticipada desde esa cuota
+    </div>
+  </div>
+
+  <!-- Amortization table -->
+  @if (this.tableData.length > 0) {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nº Cuota</th>
+            <th>Cuota</th>
+            <th>Interés</th>
+            <th>Capital</th>
+            <th>Amortización</th>
+            <th>Capital Restante</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of this.tableData; track row) {
+            <tr (click)="onRowClick(row)" class="table-row">
+              <td>{{ row.period }}</td>
+              <td>{{ row.monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ row.fees | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ row.capital | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ row.amortization | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ row.remainingCapital | currency:'EUR':'symbol':'1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

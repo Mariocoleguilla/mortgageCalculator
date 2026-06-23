@@ -1,29 +1,153 @@
-@if(formData) {
 <div class="simulator-container">
-  <h2>Simulador de Amortización</h2>
-  <p>Estás en la cuota número: <strong>{{ formData.selectedInstallment.period }}</strong></p>
-  <p>Capital pendiente actual: <strong>{{ formData.selectedInstallment.remainingCapital | currency:'EUR' }}</strong></p>
 
-  <div class="input-group">
-    <label for="extraPayment">Amortización extra (pago único):</label>
-    <input type="number" id="extraPayment" [(ngModel)]="extraPayment" (input)="calculateSimulation()"
-      placeholder="Cantidad a amortizar">
+  <div class="sim-header">
+    <h2>Simulador de Amortización Anticipada</h2>
+    <p class="sim-subtitle">Calcula el ahorro de realizar un pago extra sobre tu hipoteca</p>
   </div>
 
-  @if(periodsReduced !== null) {
-  <div class="results">
-    <h3>Resultado de la simulación</h3>
-    <p>Cuotas reducidas: <strong>{{ periodsReduced | number:'1.0-1' }} meses</strong></p>
-    <hr>
-    <p>Intereses restantes (actual): <strong>{{ interestBefore | currency:'EUR' }}</strong></p>
-    <p>Intereses restantes (tras amortización): <strong>{{ interestAfter | currency:'EUR' }}</strong></p>
-    <p><strong>Ahorro total en intereses: {{ interestSavings | currency:'EUR' }}</strong></p>
+  <!-- Mortgage base summary -->
+  <div class="mortgage-summary-card">
+    <div class="summary-row">
+      <div class="summary-item">
+        <span class="summary-label">Capital inicial</span>
+        <span class="summary-value">{{ formatAmount(amount) }} €</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Interés</span>
+        <span class="summary-value">{{ interestRate }}%</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Plazo</span>
+        <span class="summary-value">{{ years }} años</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Cuota mensual</span>
+        <span class="summary-value">{{ monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Total intereses</span>
+        <span class="summary-value highlight-red">{{ totalInterest | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Mode selector -->
+  <div class="mode-selector">
+    <p class="mode-label">¿En qué punto de la hipoteca estás?</p>
+    <div class="mode-tabs">
+      <button
+        id="mode-tab-installment"
+        class="mode-tab"
+        [class.active]="mode === 'installment'"
+        (click)="mode = 'installment'; onModeChange()">
+        📋 Desde una cuota de la tabla
+      </button>
+      <button
+        id="mode-tab-manual"
+        class="mode-tab"
+        [class.active]="mode === 'manual'"
+        (click)="mode = 'manual'; onModeChange()">
+        ✏️ Introducir capital pendiente manualmente
+      </button>
+    </div>
+  </div>
+
+  <!-- Installment mode -->
+  @if (mode === 'installment') {
+    @if (selectedInstallment) {
+      <div class="installment-info">
+        <div class="installment-badge">
+          <span class="badge-label">Cuota seleccionada</span>
+          <span class="badge-value">#{{ selectedInstallment.period }}</span>
+        </div>
+        <div class="installment-badge">
+          <span class="badge-label">Capital pendiente</span>
+          <span class="badge-value highlight-blue">{{ selectedInstallment.remainingCapital | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="installment-badge">
+          <span class="badge-label">Cuotas restantes</span>
+          <span class="badge-value">{{ totalPeriods - selectedInstallment.period }}</span>
+        </div>
+      </div>
+    } @else {
+      <div class="no-installment-hint">
+        <span class="hint-icon">💡</span>
+        <span>Haz click en una fila de la <a routerLink="/table" class="hint-link">Tabla de Amortización</a> para seleccionar tu cuota actual, o bien usa la opción de capital manual.</span>
+      </div>
+    }
   }
+
+  <!-- Manual mode -->
+  @if (mode === 'manual') {
+    <div class="input-section">
+      <label for="manualCapital" class="input-label">Capital pendiente por amortizar</label>
+      <div class="input-wrapper">
+        <input
+          type="number"
+          id="manualCapital"
+          [(ngModel)]="manualRemainingCapital"
+          (input)="onInputChange()"
+          placeholder="Ej: 120.000"
+          min="1"
+          [max]="amount"
+        />
+        <span class="input-unit">€</span>
+      </div>
+    </div>
+  }
+
+  <!-- Extra payment input (shown when mode is ready) -->
+  @if (mode === 'manual' || (mode === 'installment' && selectedInstallment)) {
+    <div class="input-section">
+      <label for="extraPayment" class="input-label">Amortización anticipada (pago único)</label>
+      <div class="input-wrapper">
+        <input
+          type="number"
+          id="extraPayment"
+          [(ngModel)]="extraPayment"
+          (input)="onInputChange()"
+          placeholder="Cantidad a amortizar de golpe"
+          min="0"
+          [max]="activeCapital"
+        />
+        <span class="input-unit">€</span>
+      </div>
+    </div>
+  }
+
+  <!-- Results -->
+  @if (periodsReduced !== null && interestSavings !== null) {
+    <div class="results-section">
+      <h3>Resultado de la simulación</h3>
+      <div class="results-grid">
+        <div class="result-card saving">
+          <span class="result-icon">💰</span>
+          <span class="result-label">Ahorro en intereses</span>
+          <span class="result-value">{{ interestSavings | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="result-card time">
+          <span class="result-icon">⏱️</span>
+          <span class="result-label">Cuotas reducidas</span>
+          <span class="result-value">{{ periodsReduced | number:'1.0-1' }} meses</span>
+        </div>
+        <div class="result-card interest">
+          <span class="result-icon">📉</span>
+          <span class="result-label">Intereses restantes</span>
+          <span class="result-value">{{ interestAfter | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+        @if (interestBefore !== null) {
+          <div class="result-card before">
+            <span class="result-icon">📊</span>
+            <span class="result-label">Intereses sin amortizar</span>
+            <span class="result-value">{{ interestBefore | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
   <div class="actions">
-    <button (click)="goBack()">Volver a la tabla</button>
+    <button class="back-btn" id="back-to-features" (click)="goBack()">← Volver a las herramientas</button>
   </div>
+
 </div>
-} @else {
-<p>No hay datos de simulación disponibles</p>
-}
