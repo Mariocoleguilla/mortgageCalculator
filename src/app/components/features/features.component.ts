@@ -29,6 +29,14 @@ export class FeaturesComponent implements OnInit {
       description: 'Simula el impacto de una amortización anticipada sobre tu hipoteca y descubre cuánto puedes ahorrar en intereses.',
       route: '/simulator',
       color: '#2196f3'
+    },
+    {
+      id: 'recurring-simulator',
+      icon: '🔄',
+      title: 'Simulador de Cuota Recurrente',
+      description: 'Calcula el ahorro de aumentar tu cuota mensual con un pago extra periódico y ve cómo se reduce el plazo de tu hipoteca.',
+      route: '/recurring-simulator',
+      color: '#9c27b0'
     }
   ];
 

@@ -8,6 +8,7 @@ import { OutstandingMortgageFormComponent } from './components/outstanding-mortg
 import { RecurringAmortizationFormComponent } from './components/recurring-amortization-form/recurring-amortization-form.component';
 import { RecurringAmortizationSimulatorComponent } from './components/recurring-amortization-simulator/recurring-amortization-simulator.component';
 import { FeaturesComponent } from './components/features/features.component';
+import { RecurringSimulatorComponent } from './components/recurring-simulator/recurring-simulator.component';
 import { mortgageDataGuard } from './guards/mortgage-data.guard';
 
 const routes: Routes = [
@@ -41,6 +42,11 @@ const routes: Routes = [
   },
   {
     path: 'recurring-simulator',
+    component: RecurringSimulatorComponent,
+    canActivate: [mortgageDataGuard]
+  },
+  {
+    path: 'recurring-amortization-simulator',
     component: RecurringAmortizationSimulatorComponent,
     canActivate: [mortgageDataGuard]
   },

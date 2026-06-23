@@ -1,8 +1,8 @@
 <div class="simulator-container">
 
   <div class="sim-header">
-    <h2>Simulador de Amortización Anticipada</h2>
-    <p class="sim-subtitle">Calcula el ahorro de realizar un pago extra sobre tu hipoteca</p>
+    <h2>Simulador de Amortización Recurrente</h2>
+    <p class="sim-subtitle">Calcula el ahorro de aumentar tu cuota mensual con un pago extra periódico</p>
   </div>
 
   <!-- Mortgage base summary -->
@@ -21,7 +21,7 @@
         <span class="summary-value">{{ years }} años</span>
       </div>
       <div class="summary-item">
-        <span class="summary-label">Cuota mensual</span>
+        <span class="summary-label">Cuota mensual actual</span>
         <span class="summary-value">{{ monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</span>
       </div>
       <div class="summary-item">
@@ -96,22 +96,26 @@
     </div>
   }
 
-  <!-- Extra payment input (shown when mode is ready) -->
+  <!-- Recurring extra payment input -->
   @if (mode === 'manual' || (mode === 'installment' && selectedInstallment)) {
     <div class="input-section">
-      <label for="extraPayment" class="input-label">Amortización anticipada (pago único)</label>
+      <label for="monthlyExtra" class="input-label">Pago extra mensual recurrente</label>
       <div class="input-wrapper">
         <input
           type="number"
-          id="extraPayment"
-          [(ngModel)]="extraPayment"
+          id="monthlyExtra"
+          [(ngModel)]="monthlyExtraPayment"
           (input)="onInputChange()"
-          placeholder="Cantidad a amortizar de golpe"
-          min="0"
-          [max]="activeCapital"
+          placeholder="Ej: 100"
+          min="1"
         />
-        <span class="input-unit">€</span>
+        <span class="input-unit">€/mes</span>
       </div>
+      @if (newMonthlyFee !== null) {
+        <p class="new-fee-hint">
+          Tu nueva cuota mensual sería: <strong>{{ newMonthlyFee | currency:'EUR':'symbol':'1.2-2' }}</strong>
+        </p>
+      }
     </div>
   }
 
@@ -147,7 +151,7 @@
   }
 
   <div class="actions">
-    <button class="back-btn" id="back-to-features" (click)="goBack()">← Volver a las herramientas</button>
+    <button class="back-btn" id="back-to-features-recurring" (click)="goBack()">← Volver a las herramientas</button>
   </div>
 
 </div>

@@ -15,6 +15,10 @@ export class MortgageService {
   // Flag to show a warning when redirected from a protected route
   needsMortgageDataWarning = false;
 
+  // Which simulator to navigate to when the user selects a table row
+  // 'one-time' → /simulator | 'recurring' → /recurring-simulator | null → /simulator (default)
+  pendingSimulatorRoute: '/simulator' | '/recurring-simulator' = '/simulator';
+
   public formData = new BehaviorSubject<any>({}); // Initial data
   formData$ = this.formData.asObservable(); // Public Observable
 

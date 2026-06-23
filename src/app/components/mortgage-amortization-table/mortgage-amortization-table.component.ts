@@ -32,9 +32,10 @@ export class MortgageAmortizationTableComponent {
   }
 
   onRowClick(row: any): void {
-    // Combinamos los datos del formulario con la cuota seleccionada
+    const destination = this.mortgageService.pendingSimulatorRoute;
+    this.mortgageService.pendingSimulatorRoute = '/simulator'; // reset to default
     this.mortgageService.setFormData({ ...this.formData, selectedInstallment: row });
-    this.router.navigate(['/simulator']);
+    this.router.navigate([destination]);
   }
 
   fillMortgageTable(formData: FormMortgage): void {

@@ -7,13 +7,13 @@ import { MortgageService } from 'src/app/services/mortgage.service';
 type InputMode = 'installment' | 'manual';
 
 @Component({
-  selector: 'app-amortization-simulator',
+  selector: 'app-recurring-simulator',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './amortization-simulator.component.html',
-  styleUrls: ['./amortization-simulator.component.sass']
+  templateUrl: './recurring-simulator.component.html',
+  styleUrls: ['./recurring-simulator.component.sass']
 })
-export class AmortizationSimulatorComponent implements OnInit {
+export class RecurringSimulatorComponent implements OnInit {
 
   // Base mortgage data
   amount: number = 0;
@@ -33,10 +33,12 @@ export class AmortizationSimulatorComponent implements OnInit {
   // Manual mode
   manualRemainingCapital: number | null = null;
 
-  // Extra payment (shared by both modes)
-  extraPayment: number = 0;
+  // Recurring extra payment per period
+  monthlyExtraPayment: number = 0;
 
-  // Computed simulation results
+  // Simulation results
+  newMonthlyFee: number | null = null;
+  newTotalPeriods: number | null = null;
   periodsReduced: number | null = null;
   interestBefore: number | null = null;
   interestAfter: number | null = null;
@@ -58,11 +60,9 @@ export class AmortizationSimulatorComponent implements OnInit {
     this.periodsPerYear = data.periodsPerYear ?? 12;
     this.computeBaseValues();
 
-    // If arrived from a table row click, pre-select installment mode
     if (data.selectedInstallment) {
       this.selectedInstallment = data.selectedInstallment;
       this.mode = 'installment';
-      // Clear the selectedInstallment from the service so navigating back doesn't re-trigger
       const { selectedInstallment, ...rest } = data;
       this.mortgageService.setFormData(rest);
     }
@@ -88,7 +88,6 @@ export class AmortizationSimulatorComponent implements OnInit {
     if (this.mode === 'installment' && this.selectedInstallment) {
       return this.totalPeriods - this.selectedInstallment.period;
     }
-    // Estimate remaining periods from manual capital using the same monthly fee
     const r = this.interestRate / 100 / this.periodsPerYear;
     const capital = this.manualRemainingCapital ?? this.amount;
     if (r === 0) return capital / this.monthlyFee;
@@ -99,37 +98,42 @@ export class AmortizationSimulatorComponent implements OnInit {
 
   calculateSimulation(): void {
     const capital = this.activeCapital;
-    if (!capital || capital <= 0) { this.clearResults(); return; }
+    if (!capital || capital <= 0 || this.monthlyExtraPayment <= 0) {
+      this.clearResults();
+      return;
+    }
 
     const remainingPeriods = this.remainingPeriodsBefore;
     const r = this.interestRate / 100 / this.periodsPerYear;
 
+    // Interest without extra payment
     this.interestBefore = (remainingPeriods * this.monthlyFee) - capital;
 
-    const remainingAfterExtra = capital - this.extraPayment;
+    // New monthly fee including the extra recurring payment
+    this.newMonthlyFee = this.monthlyFee + this.monthlyExtraPayment;
 
-    if (remainingAfterExtra <= 0) {
-      this.periodsReduced = remainingPeriods;
-      this.interestAfter = 0;
-      this.interestSavings = this.interestBefore;
-      return;
-    }
-
+    // New number of periods to pay off the remaining capital
     let newPeriods: number;
     if (r === 0) {
-      newPeriods = remainingAfterExtra / this.monthlyFee;
+      newPeriods = capital / this.newMonthlyFee;
     } else {
-      const val = 1 - (r * remainingAfterExtra) / this.monthlyFee;
-      if (val <= 0) { newPeriods = 0; }
-      else newPeriods = -Math.log(val) / Math.log(1 + r);
+      const val = 1 - (r * capital) / this.newMonthlyFee;
+      if (val <= 0) {
+        newPeriods = 1;
+      } else {
+        newPeriods = -Math.log(val) / Math.log(1 + r);
+      }
     }
 
-    this.interestAfter = newPeriods * this.monthlyFee - remainingAfterExtra;
+    this.newTotalPeriods = newPeriods;
     this.periodsReduced = remainingPeriods - newPeriods;
+    this.interestAfter = (newPeriods * this.newMonthlyFee) - capital;
     this.interestSavings = this.interestBefore - this.interestAfter;
   }
 
   clearResults(): void {
+    this.newMonthlyFee = null;
+    this.newTotalPeriods = null;
     this.periodsReduced = null;
     this.interestBefore = null;
     this.interestAfter = null;
@@ -137,25 +141,25 @@ export class AmortizationSimulatorComponent implements OnInit {
   }
 
   onModeChange(): void {
-    this.extraPayment = 0;
+    this.monthlyExtraPayment = 0;
     this.clearResults();
   }
 
   onInputChange(): void {
-    if (this.extraPayment > 0) {
+    if (this.monthlyExtraPayment > 0) {
       this.calculateSimulation();
     } else {
       this.clearResults();
     }
   }
 
-  formatAmount(value: number): string {
-    return value?.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '';
+  goToTable(): void {
+    this.mortgageService.pendingSimulatorRoute = '/recurring-simulator';
+    this.router.navigate(['/table']);
   }
 
-  goToTable(): void {
-    this.mortgageService.pendingSimulatorRoute = '/simulator';
-    this.router.navigate(['/table']);
+  formatAmount(value: number): string {
+    return value?.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '';
   }
 
   goBack(): void {
