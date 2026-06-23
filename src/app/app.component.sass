@@ -4,7 +4,8 @@
   flex-direction: column
   transition: transform 0.3s ease-in-out
   position: relative
-  background-color: #f8fafc
+  background-color: var(--bg-color)
+  color: var(--text-main)
 
   &.sidebar-open
     transform: translateX(250px)
@@ -18,13 +19,13 @@
   display: flex
   align-items: center
   padding: 1rem 2rem
-  background-color: #ffffff
-  border-bottom: 1px solid #e2e8f0
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05)
+  background-color: var(--card-bg)
+  border-bottom: 1px solid var(--border-color)
+  box-shadow: var(--shadow-sm)
   gap: 1.5rem
 
 .hamburger-menu
-  background-color: #f1f5f9
+  background-color: var(--hover-bg)
   border: none
   border-radius: 8px
   width: 40px
@@ -35,11 +36,11 @@
   font-size: 1.25rem
   cursor: pointer
   transition: all 0.2s ease-in-out
-  color: #334155
+  color: var(--text-muted)
 
   &:hover
-    background-color: #e2e8f0
-    color: #0f172a
+    background-color: var(--border-color)
+    color: var(--text-main)
     transform: scale(1.05)
 
   &:active

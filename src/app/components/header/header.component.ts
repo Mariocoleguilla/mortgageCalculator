@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   mortgageData: any = null;
+  isDarkMode = false;
   private sub!: Subscription;
 
   constructor(
@@ -19,6 +20,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.isDarkMode = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    this.updateTheme();
+
     this.sub = this.mortgageService.formData$.subscribe(data => {
       this.mortgageData = data && data.amount ? data : null;
     });
@@ -40,5 +46,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   formatAmount(amount: number): string {
     return amount?.toLocaleString('de-DE') ?? '';
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.updateTheme();
+  }
+
+  private updateTheme(): void {
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }
 }

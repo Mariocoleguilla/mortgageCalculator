@@ -1,9 +1,9 @@
 @use "sass:color"
 
 $primary: #4caf50
-$blue: #3b82f6
+$blue: var(--blue-border)
 $red: #ef4444
-$border: #e2e8f0
+$border: var(--border-color)
 
 .simulator-container
   max-width: 760px
@@ -20,17 +20,17 @@ $border: #e2e8f0
   h2
     font-size: 1.75rem
     font-weight: 700
-    color: #0f172a
+    color: var(--text-main)
     margin: 0 0 0.4rem
 
   .sim-subtitle
-    color: #64748b
+    color: var(--text-muted)
     font-size: 0.95rem
     margin: 0
 
 // ---- Mortgage summary ----
 .mortgage-summary-card
-  background: #f8fafc
+  background: var(--card-light-bg)
   border: 1px solid $border
   border-radius: 14px
   padding: 1.25rem 1.5rem
@@ -50,13 +50,13 @@ $border: #e2e8f0
   font-size: 0.7rem
   text-transform: uppercase
   letter-spacing: 0.05em
-  color: #94a3b8
+  color: var(--text-muted)
   font-weight: 500
 
 .summary-value
   font-size: 1rem
   font-weight: 700
-  color: #0f172a
+  color: var(--text-main)
 
   &.highlight-red
     color: $red
@@ -72,7 +72,7 @@ $border: #e2e8f0
 
 .mode-label
   font-weight: 600
-  color: #374151
+  color: var(--text-main)
   font-size: 0.95rem
   margin: 0
 
@@ -87,8 +87,8 @@ $border: #e2e8f0
   padding: 0.75rem 1rem
   border: 1.5px solid $border
   border-radius: 10px
-  background: #fff
-  color: #64748b
+  background: var(--card-bg)
+  color: var(--text-muted)
   font-size: 0.9rem
   font-weight: 600
   cursor: pointer
@@ -96,12 +96,12 @@ $border: #e2e8f0
   text-align: center
 
   &:hover
-    border-color: #94a3b8
-    color: #0f172a
+    border-color: var(--text-muted)
+    color: var(--text-main)
 
   &.active
     border-color: $primary
-    background: #f0fdf4
+    background: var(--hover-bg)
     color: $primary
 
 // ---- Installment info ----
@@ -114,8 +114,8 @@ $border: #e2e8f0
   display: flex
   flex-direction: column
   gap: 0.2rem
-  background: #eff6ff
-  border: 1px solid #bfdbfe
+  background: var(--blue-bg)
+  border: 1px solid var(--blue-border)
   border-radius: 10px
   padding: 0.75rem 1.1rem
   min-width: 130px
@@ -124,13 +124,13 @@ $border: #e2e8f0
   font-size: 0.7rem
   text-transform: uppercase
   letter-spacing: 0.05em
-  color: #64748b
+  color: var(--text-muted)
   font-weight: 500
 
 .badge-value
   font-size: 1.05rem
   font-weight: 700
-  color: #0f172a
+  color: var(--text-main)
 
   &.highlight-blue
     color: $blue
@@ -146,6 +146,11 @@ $border: #e2e8f0
   border-radius: 10px
   color: #78350f
   font-size: 0.9rem
+
+  html.dark &
+    background: #422006
+    border-color: #78350f
+    color: #fef08a
 
   .hint-icon
     font-size: 1.1rem
@@ -173,7 +178,7 @@ $border: #e2e8f0
 
 .input-label
   font-weight: 600
-  color: #374151
+  color: var(--text-main)
   font-size: 0.95rem
 
 .input-wrapper
@@ -182,7 +187,7 @@ $border: #e2e8f0
   border: 1.5px solid $border
   border-radius: 10px
   overflow: hidden
-  background: #fff
+  background: var(--card-bg)
   transition: border-color 0.2s
 
   &:focus-within
@@ -194,18 +199,18 @@ $border: #e2e8f0
     border: none
     outline: none
     font-size: 1rem
-    color: #0f172a
+    color: var(--text-main)
     background: transparent
 
     &::placeholder
-      color: #94a3b8
+      color: var(--text-muted)
 
   .input-unit
     padding: 0 1rem
-    color: #64748b
+    color: var(--text-muted)
     font-weight: 600
     font-size: 0.95rem
-    background: #f8fafc
+    background: var(--card-light-bg)
     border-left: 1px solid $border
     display: flex
     align-items: center
@@ -215,7 +220,7 @@ $border: #e2e8f0
   h3
     font-size: 1rem
     font-weight: 700
-    color: #0f172a
+    color: var(--text-main)
     margin: 0 0 0.75rem
 
 .results-grid
@@ -224,7 +229,7 @@ $border: #e2e8f0
   gap: 1rem
 
 .result-card
-  background: #fff
+  background: var(--card-bg)
   border: 1px solid $border
   border-radius: 12px
   padding: 1.1rem 1.25rem
@@ -235,23 +240,26 @@ $border: #e2e8f0
 
   &:hover
     transform: translateY(-2px)
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08)
+    box-shadow: var(--shadow-md)
 
   &.saving
     border-color: #bbf7d0
-    background: #f0fdf4
+    background: var(--hover-bg)
+    
+    html.dark &
+      border-color: var(--border-color)
 
   &.time
-    border-color: #bfdbfe
-    background: #eff6ff
+    border-color: var(--blue-border)
+    background: var(--blue-bg)
 
   &.interest
-    border-color: #fecaca
-    background: #fef2f2
+    border-color: var(--red-border)
+    background: var(--red-bg)
 
   &.before
-    border-color: #e9d5ff
-    background: #faf5ff
+    border-color: var(--purple-border)
+    background: var(--purple-bg)
 
 .result-icon
   font-size: 1.4rem
@@ -261,13 +269,13 @@ $border: #e2e8f0
   font-size: 0.72rem
   text-transform: uppercase
   letter-spacing: 0.05em
-  color: #64748b
+  color: var(--text-muted)
   font-weight: 500
 
 .result-value
   font-size: 1.1rem
   font-weight: 700
-  color: #0f172a
+  color: var(--text-main)
   display: flex
   flex-direction: column
   gap: 0.1rem
@@ -275,7 +283,7 @@ $border: #e2e8f0
 .result-subvalue
   font-size: 0.85rem
   font-weight: 500
-  color: #475569
+  color: var(--text-muted)
 
 // ---- Actions ----
 .actions
@@ -287,11 +295,25 @@ $border: #e2e8f0
   border-radius: 8px
   padding: 0.6rem 1.2rem
   font-size: 0.9rem
-  color: #374151
+  color: var(--text-main)
   cursor: pointer
   font-weight: 600
   transition: all 0.2s
 
   &:hover
-    background: #f1f5f9
-    border-color: #94a3b8
+    background: var(--hover-bg)
+    border-color: var(--text-muted)
+
+.hint-link-btn
+  background: none
+  border: none
+  padding: 0
+  font: inherit
+  color: $blue
+  font-weight: 600
+  cursor: pointer
+  text-decoration: underline
+  text-underline-offset: 2px
+
+  &:hover
+    opacity: 0.75

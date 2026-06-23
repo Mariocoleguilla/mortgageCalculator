@@ -2,9 +2,6 @@
 
 $primary-color: #4caf50
 $error-color: #ef4444
-$input-border-color: #e2e8f0
-$input-border-focus-color: $primary-color
-$label-color: #374151
 
 .form-page
   max-width: 560px
@@ -18,12 +15,12 @@ $label-color: #374151
   h2
     font-size: 1.75rem
     font-weight: 700
-    color: #0f172a
+    color: var(--text-main)
     margin: 0 0 0.5rem
 
   .subtitle
     font-size: 0.95rem
-    color: #64748b
+    color: var(--text-muted)
     margin: 0
 
 .warning-banner
@@ -37,6 +34,11 @@ $label-color: #374151
   color: #92400e
   font-size: 0.9rem
   margin-bottom: 1.5rem
+
+  html.dark &
+    background-color: #3b2205
+    border-color: #b45309
+    color: #fde68a
 
   .warning-icon
     font-size: 1.1rem
@@ -52,15 +54,18 @@ $label-color: #374151
     padding: 0 0.25rem
     flex-shrink: 0
 
+    html.dark &
+      color: #fde68a
+
     &:hover
       opacity: 0.7
 
 .mortgage-form
-  background: #ffffff
-  border: 1px solid $input-border-color
+  background: var(--card-bg)
+  border: 1px solid var(--border-color)
   border-radius: 16px
   padding: 2rem
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07)
+  box-shadow: var(--shadow-md)
 
 .form-field
   margin-bottom: 1.5rem
@@ -69,24 +74,24 @@ $label-color: #374151
     display: block
     margin-bottom: 0.4rem
     font-weight: 600
-    color: $label-color
+    color: var(--text-main)
     font-size: 0.9rem
 
   input
     width: 100%
     padding: 0.65rem 0.875rem
-    border: 1.5px solid $input-border-color
+    border: 1.5px solid var(--border-color)
     border-radius: 8px
     font-size: 1rem
     outline: none
     transition: border-color 0.2s
     box-sizing: border-box
-    color: #0f172a
-    background: #f8fafc
+    color: var(--text-main)
+    background: var(--card-light-bg)
 
     &:focus
-      border-color: $input-border-focus-color
-      background: #ffffff
+      border-color: $primary-color
+      background: var(--card-bg)
 
 .field-error
   margin-top: 0.3rem
@@ -120,7 +125,9 @@ $label-color: #374151
     transform: translateY(0)
 
   &:disabled
-    background-color: #94a3b8
+    background-color: var(--text-muted)
+    opacity: 0.6
     cursor: not-allowed
     transform: none
     box-shadow: none
+
