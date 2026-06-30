@@ -4,6 +4,7 @@ import { FormMortgage } from '../models/form-mortgage/form-mortgage.module';
 
 const SESSION_KEY = 'mortgageFormData';
 const SESSION_KEY_INSTALLMENT = 'mortgageSelectedInstallment';
+const SESSION_KEY_SAVINGS = 'mortgageSavingsData';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class MortgageService {
   public selectedInstallment = new BehaviorSubject<any>(null);
   selectedInstallment$ = this.selectedInstallment.asObservable();
 
+  // Persistently saved savings calculator data
+  public savingsData = new BehaviorSubject<any>(null);
+  savingsData$ = this.savingsData.asObservable();
+
   constructor() {
     // Restore mortgage data from sessionStorage on startup
     const saved = sessionStorage.getItem(SESSION_KEY);
@@ -54,6 +59,16 @@ export class MortgageService {
         sessionStorage.removeItem(SESSION_KEY_INSTALLMENT);
       }
     }
+
+    // Restore savings data from sessionStorage on startup
+    const savedSavings = sessionStorage.getItem(SESSION_KEY_SAVINGS);
+    if (savedSavings) {
+      try {
+        this.savingsData.next(JSON.parse(savedSavings));
+      } catch {
+        sessionStorage.removeItem(SESSION_KEY_SAVINGS);
+      }
+    }
   }
 
   setFormData(data: any) {
@@ -71,6 +86,7 @@ export class MortgageService {
     sessionStorage.removeItem(SESSION_KEY);
     this._hasMortgageData.next(false);
     this.clearSelectedInstallment();
+    this.clearSavingsData();
   }
 
   setSelectedInstallment(installment: any) {
@@ -81,5 +97,15 @@ export class MortgageService {
   clearSelectedInstallment() {
     this.selectedInstallment.next(null);
     sessionStorage.removeItem(SESSION_KEY_INSTALLMENT);
+  }
+
+  setSavingsData(data: any) {
+    this.savingsData.next(data);
+    sessionStorage.setItem(SESSION_KEY_SAVINGS, JSON.stringify(data));
+  }
+
+  clearSavingsData() {
+    this.savingsData.next(null);
+    sessionStorage.removeItem(SESSION_KEY_SAVINGS);
   }
 }

@@ -10,6 +10,7 @@ import { RecurringAmortizationSimulatorComponent } from './components/recurring-
 import { FeaturesComponent } from './components/features/features.component';
 import { RecurringSimulatorComponent } from './components/recurring-simulator/recurring-simulator.component';
 import { mortgageDataGuard } from './guards/mortgage-data.guard';
+import { SavingsCalculatorComponent } from './components/savings-calculator/savings-calculator.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,11 @@ const routes: Routes = [
   {
     path: 'recurring-amortization-simulator',
     component: RecurringAmortizationSimulatorComponent,
+    canActivate: [mortgageDataGuard]
+  },
+  {
+    path: 'savings-calculator',
+    component: SavingsCalculatorComponent,
     canActivate: [mortgageDataGuard]
   },
   {

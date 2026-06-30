@@ -37,6 +37,14 @@ export class FeaturesComponent implements OnInit {
       description: 'Calcula el ahorro de aumentar tu cuota mensual con un pago extra periódico y ve cómo se reduce el plazo de tu hipoteca.',
       route: '/recurring-simulator',
       color: '#9c27b0'
+    },
+    {
+      id: 'savings-calculator',
+      icon: '💰',
+      title: 'Calculadora de Ahorro',
+      description: 'Calcula cuánto dinero te sobra al mes tras pagar la cuota de la hipoteca y tus gastos comunes (luz, agua, comunidad, seguros, etc.).',
+      route: '/savings-calculator',
+      color: '#ff9800'
     }
   ];
 

@@ -1,0 +1,256 @@
+<div class="savings-container">
+
+  <div class="savings-header">
+    <h2>💰 Calculadora de Ahorro</h2>
+    <p class="savings-subtitle">Estima cuánto dinero te queda al mes tras pagar tu hipoteca y tus gastos fijos</p>
+  </div>
+
+  <div class="savings-content-grid">
+    <!-- LEFT PANEL: FORM -->
+    <div class="form-panel-card">
+      <form [formGroup]="savingsForm" class="savings-form">
+        <!-- GROUP 1: INGRESOS -->
+        <div class="form-group-section">
+          <h3 class="section-title">💵 Ingresos</h3>
+          <div class="form-field">
+            <label for="monthlySalary">Sueldo neto mensual</label>
+            <div class="input-wrapper">
+              <input id="monthlySalary" type="number" formControlName="monthlySalary" placeholder="Ej: 2200" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+            @if (savingsForm.get('monthlySalary')?.invalid && savingsForm.get('monthlySalary')?.touched) {
+              <div class="field-error">
+                <small>El sueldo neto mensual es obligatorio</small>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- GROUP 2: GASTOS MENSUALES -->
+        <div class="form-group-section">
+          <h3 class="section-title">🏠 Gastos del Hogar y Suministros (Mensual)</h3>
+          
+          <div class="form-field">
+            <label for="community">Gastos de Comunidad</label>
+            <div class="input-wrapper">
+              <input id="community" type="number" formControlName="community" placeholder="Ej: 60" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="electricity">Electricidad (Luz)</label>
+            <div class="input-wrapper">
+              <input id="electricity" type="number" formControlName="electricity" placeholder="Ej: 70" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="gas">Gas / Calefacción</label>
+            <div class="input-wrapper">
+              <input id="gas" type="number" formControlName="gas" placeholder="Ej: 40" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="water">Agua</label>
+            <div class="input-wrapper">
+              <input id="water" type="number" formControlName="water" placeholder="Ej: 20" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="internet">Internet / Teléfono</label>
+            <div class="input-wrapper">
+              <input id="internet" type="number" formControlName="internet" placeholder="Ej: 35" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP 3: GASTOS ANUALES -->
+        <div class="form-group-section">
+          <h3 class="section-title">📅 Seguros e Impuestos (Anual)</h3>
+          <p class="section-subtitle-hint">Se prorratearán mensualmente (se dividen entre 12) para los cálculos mensuales.</p>
+
+          <div class="form-field">
+            <label for="homeInsurance">Seguro de hogar (anual)</label>
+            <div class="input-wrapper">
+              <input id="homeInsurance" type="number" formControlName="homeInsurance" placeholder="Ej: 240" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="ibi">IBI (Impuesto sobre Bienes Inmuebles anual)</label>
+            <div class="input-wrapper">
+              <input id="ibi" type="number" formControlName="ibi" placeholder="Ej: 450" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="garbage">Tasa de basuras (anual)</label>
+            <div class="input-wrapper">
+              <input id="garbage" type="number" formControlName="garbage" placeholder="Ej: 90" min="0" />
+              <span class="input-unit">€</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- RIGHT PANEL: RESULTS -->
+    <div class="results-panel-card">
+      <div class="results-panel-header">
+        <h3>Resumen de Ahorro</h3>
+        
+        <!-- Toggle Mensual/Anual -->
+        <div class="toggle-container">
+          <button 
+            type="button" 
+            class="toggle-btn" 
+            [class.active]="!isAnnualView" 
+            (click)="toggleViewMode(false)">
+            Mensual
+          </button>
+          <button 
+            type="button" 
+            class="toggle-btn" 
+            [class.active]="isAnnualView" 
+            (click)="toggleViewMode(true)">
+            Anual
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN BALANCES -->
+      <div class="salary-vs-expenses">
+        <div class="balance-card positive">
+          <span class="balance-label">Ingresos Netos</span>
+          <span class="balance-value">+ {{ formatAmount(displaySalary) }} €</span>
+        </div>
+        <div class="balance-card negative">
+          <span class="balance-label">Gastos Totales</span>
+          <span class="balance-value">- {{ formatAmount(displayTotalExpenses) }} €</span>
+        </div>
+      </div>
+
+      <!-- DYNAMIC PROGRESS/SAVINGS RATE BAR -->
+      <div class="savings-progress-section" [class.negative-savings]="displaySavings < 0">
+        <div class="progress-info">
+          <span class="progress-label">Tasa de Ahorro</span>
+          <span class="progress-val">{{ displaySavings < 0 ? '0' : formatAmount(savingsPercentage) }}%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" [style.width.%]="displaySavings < 0 ? 0 : (savingsPercentage > 100 ? 100 : savingsPercentage)"></div>
+        </div>
+        <p class="progress-hint">
+          @if (displaySavings < 0) {
+            Tus gastos exceden tus ingresos. ¡No estás ahorrando!
+          } @else {
+            Ahorras un {{ formatAmount(savingsPercentage) }}% de tus ingresos netos.
+          }
+        </p>
+      </div>
+
+      <!-- DETAILED BREAKDOWN -->
+      <div class="breakdown-list">
+        <h4>Desglose detallado ({{ isAnnualView ? 'Anual' : 'Mensual' }})</h4>
+        
+        <div class="breakdown-item row-salary">
+          <span>Ingreso neto mensual</span>
+          <span class="val-plus">{{ formatAmount(displaySalary) }} €</span>
+        </div>
+
+        <div class="breakdown-item row-mortgage">
+          <div class="label-with-hint">
+            <span>Cuota Hipoteca</span>
+            <small class="row-hint">
+              Basado en hipoteca de {{ formatAmount(mortgageAmount) }} € al {{ interestRate }}%
+            </small>
+          </div>
+          <span class="val-minus">- {{ formatAmount(displayMortgage) }} €</span>
+        </div>
+
+        <div class="breakdown-item">
+          <span>Suministros y Comunidad</span>
+          <span class="val-minus">- {{ formatAmount(displaySupplies) }} €</span>
+        </div>
+
+        <div class="breakdown-item">
+          <span>Seguros e Impuestos</span>
+          <span class="val-minus">- {{ formatAmount(displayTaxesInsurance) }} €</span>
+        </div>
+
+        <div class="breakdown-total" [class.negative]="displaySavings < 0">
+          <span>Dinero Sobrante (Ahorro)</span>
+          <span class="total-val">{{ displaySavings > 0 ? '+' : '' }} {{ formatAmount(displaySavings) }} €</span>
+        </div>
+      </div>
+
+      <!-- HEALTH ADVISORY NOTIFICATIONS -->
+      <div class="financial-advices">
+        <h4>Recomendaciones Financieras</h4>
+
+        @if (displaySavings < 0) {
+          <div class="advice-card urgent">
+            <span class="advice-icon">🚨</span>
+            <div class="advice-content">
+              <strong>Balance en Negativo</strong>
+              <p>Tus gastos mensuales superan tus ingresos netos por <strong>{{ formatAmount(absoluteDisplaySavings) }} €</strong>. Es crucial revisar tus gastos y buscar áreas para reducirlos de inmediato.</p>
+            </div>
+          </div>
+        }
+
+        @if (mortgageToIncomeRatio > 35) {
+          <div class="advice-card warning">
+            <span class="advice-icon">⚠️</span>
+            <div class="advice-content">
+              <strong>Alto Endeudamiento</strong>
+              <p>La cuota de la hipoteca representa el <strong>{{ formatAmount(mortgageToIncomeRatio) }}%</strong> de tus ingresos netos. Los expertos aconsejan que no supere el 30-35% para evitar riesgos de impago o asfixia financiera.</p>
+            </div>
+          </div>
+        }
+
+        @if (displaySavings >= 0 && savingsPercentage < 10) {
+          <div class="advice-card info">
+            <span class="advice-icon">💡</span>
+            <div class="advice-content">
+              <strong>Capacidad de Ahorro Baja</strong>
+              <p>Tu tasa de ahorro es del <strong>{{ formatAmount(savingsPercentage) }}%</strong>. Se aconseja intentar ahorrar al menos un 10% (idealmente un 20%) de tus ingresos para crear un fondo de emergencia sólido.</p>
+            </div>
+          </div>
+        }
+
+        @if (savingsPercentage >= 10 && savingsPercentage < 20) {
+          <div class="advice-card success-light">
+            <span class="advice-icon">👍</span>
+            <div class="advice-content">
+              <strong>Buen camino</strong>
+              <p>Estás ahorrando el <strong>{{ formatAmount(savingsPercentage) }}%</strong> de tus ingresos netos. Continúa así para asegurar tus metas financieras de mediano y largo plazo.</p>
+            </div>
+          </div>
+        }
+
+        @if (savingsPercentage >= 20) {
+          <div class="advice-card success">
+            <span class="advice-icon">✨</span>
+            <div class="advice-content">
+              <strong>¡Excelente Tasa de Ahorro!</strong>
+              <p>Estás ahorrando un excelente <strong>{{ formatAmount(savingsPercentage) }}%</strong> de tus ingresos netos, superando la meta recomendada del 20% (Regla 50/30/20). ¡Estás construyendo tu libertad financiera a gran velocidad!</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="back-btn" (click)="goBack()">← Volver a las herramientas</button>
+  </div>
+
+</div>
