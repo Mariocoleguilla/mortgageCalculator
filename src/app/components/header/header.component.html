@@ -23,6 +23,24 @@
     </div>
   }
 
+  @if (selectedInstallment) {
+    <div class="installment-summary">
+      <span class="installment-icon">📍</span>
+      <span class="summary-item">
+        <span class="summary-label">Cuota actual</span>
+        <span class="summary-value">#{{ selectedInstallment.period }}</span>
+      </span>
+      <span class="summary-divider">|</span>
+      <span class="summary-item">
+        <span class="summary-label">Capital pendiente</span>
+        <span class="summary-value highlight-blue">{{ formatAmount(selectedInstallment.remainingCapital) }} €</span>
+      </span>
+      <button class="clear-mortgage-btn" title="Limpiar cuota seleccionada" (click)="clearInstallment($event)">
+        &times;
+      </button>
+    </div>
+  }
+
   <button class="theme-toggle-btn" (click)="toggleTheme()" [title]="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
     {{ isDarkMode ? '☀️' : '🌙' }}
   </button>

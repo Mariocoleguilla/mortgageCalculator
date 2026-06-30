@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 type InputMode = 'installment' | 'manual';
@@ -13,7 +14,7 @@ type InputMode = 'installment' | 'manual';
   templateUrl: './amortization-simulator.component.html',
   styleUrls: ['./amortization-simulator.component.sass']
 })
-export class AmortizationSimulatorComponent implements OnInit {
+export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
 
   // Base mortgage data
   amount: number = 0;
@@ -44,6 +45,8 @@ export class AmortizationSimulatorComponent implements OnInit {
   interestAfter: number | null = null;
   interestSavings: number | null = null;
 
+  private installmentSub!: Subscription;
+
   constructor(private mortgageService: MortgageService, private router: Router) {}
 
   ngOnInit(): void {
@@ -60,14 +63,22 @@ export class AmortizationSimulatorComponent implements OnInit {
     this.periodsPerYear = data.periodsPerYear ?? 12;
     this.computeBaseValues();
 
-    // If arrived from a table row click, pre-select installment mode
-    if (data.selectedInstallment) {
-      this.selectedInstallment = data.selectedInstallment;
-      this.mode = 'installment';
-      // Clear the selectedInstallment from the service so navigating back doesn't re-trigger
-      const { selectedInstallment, ...rest } = data;
-      this.mortgageService.setFormData(rest);
-    }
+    // Subscribe to installment changes to reactively update/clear state
+    this.installmentSub = this.mortgageService.selectedInstallment$.subscribe(inst => {
+      this.selectedInstallment = inst;
+      if (inst) {
+        this.mode = 'installment';
+      } else {
+        this.mode = 'manual';
+        this.extraPayment = 0;
+        this.formattedExtraPayment = '';
+        this.clearResults();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.installmentSub?.unsubscribe();
   }
 
   computeBaseValues(): void {
@@ -97,6 +108,12 @@ export class AmortizationSimulatorComponent implements OnInit {
     const val = 1 - (r * capital) / this.monthlyFee;
     if (val <= 0) return 0;
     return -Math.log(val) / Math.log(1 + r);
+  }
+
+  get currentInterestBefore(): number | null {
+    const capital = this.activeCapital;
+    if (!capital || capital <= 0) return null;
+    return (this.remainingPeriodsBefore * this.monthlyFee) - capital;
   }
 
   calculateSimulation(): void {
@@ -215,6 +232,15 @@ export class AmortizationSimulatorComponent implements OnInit {
   goToTable(): void {
     this.mortgageService.pendingSimulatorRoute = '/simulator';
     this.router.navigate(['/table']);
+  }
+
+  clearInstallment(): void {
+    this.mortgageService.clearSelectedInstallment();
+    this.selectedInstallment = null;
+    this.mode = 'manual';
+    this.extraPayment = 0;
+    this.formattedExtraPayment = '';
+    this.clearResults();
   }
 
   goBack(): void {

@@ -11,8 +11,10 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   mortgageData: any = null;
+  selectedInstallment: any = null;
   isDarkMode = false;
   private sub!: Subscription;
+  private installmentSub!: Subscription;
 
   constructor(
     private mortgageService: MortgageService,
@@ -28,10 +30,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.sub = this.mortgageService.formData$.subscribe(data => {
       this.mortgageData = data && data.amount ? data : null;
     });
+
+    this.installmentSub = this.mortgageService.selectedInstallment$.subscribe(inst => {
+      this.selectedInstallment = inst;
+    });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.installmentSub?.unsubscribe();
   }
 
   goHome(): void {
@@ -42,6 +49,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.mortgageService.clearFormData();
     this.router.navigate(['/home']);
+  }
+
+  clearInstallment(event: Event): void {
+    event.stopPropagation();
+    this.mortgageService.clearSelectedInstallment();
   }
 
   formatAmount(amount: number): string {

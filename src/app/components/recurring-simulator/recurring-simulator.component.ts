@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
 
 type InputMode = 'installment' | 'manual';
@@ -13,7 +14,7 @@ type InputMode = 'installment' | 'manual';
   templateUrl: './recurring-simulator.component.html',
   styleUrls: ['./recurring-simulator.component.sass']
 })
-export class RecurringSimulatorComponent implements OnInit {
+export class RecurringSimulatorComponent implements OnInit, OnDestroy {
 
   // Base mortgage data
   amount: number = 0;
@@ -46,6 +47,8 @@ export class RecurringSimulatorComponent implements OnInit {
   interestAfter: number | null = null;
   interestSavings: number | null = null;
 
+  private installmentSub!: Subscription;
+
   constructor(private mortgageService: MortgageService, private router: Router) {}
 
   ngOnInit(): void {
@@ -62,12 +65,22 @@ export class RecurringSimulatorComponent implements OnInit {
     this.periodsPerYear = data.periodsPerYear ?? 12;
     this.computeBaseValues();
 
-    if (data.selectedInstallment) {
-      this.selectedInstallment = data.selectedInstallment;
-      this.mode = 'installment';
-      const { selectedInstallment, ...rest } = data;
-      this.mortgageService.setFormData(rest);
-    }
+    // Subscribe to installment changes to reactively update/clear state
+    this.installmentSub = this.mortgageService.selectedInstallment$.subscribe(inst => {
+      this.selectedInstallment = inst;
+      if (inst) {
+        this.mode = 'installment';
+      } else {
+        this.mode = 'manual';
+        this.monthlyExtraPayment = 0;
+        this.formattedMonthlyExtraPayment = '';
+        this.clearResults();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.installmentSub?.unsubscribe();
   }
 
   computeBaseValues(): void {
@@ -96,6 +109,12 @@ export class RecurringSimulatorComponent implements OnInit {
     const val = 1 - (r * capital) / this.monthlyFee;
     if (val <= 0) return 0;
     return -Math.log(val) / Math.log(1 + r);
+  }
+
+  get currentInterestBefore(): number | null {
+    const capital = this.activeCapital;
+    if (!capital || capital <= 0) return null;
+    return (this.remainingPeriodsBefore * this.monthlyFee) - capital;
   }
 
   calculateSimulation(): void {
@@ -158,6 +177,15 @@ export class RecurringSimulatorComponent implements OnInit {
   goToTable(): void {
     this.mortgageService.pendingSimulatorRoute = '/recurring-simulator';
     this.router.navigate(['/table']);
+  }
+
+  clearInstallment(): void {
+    this.mortgageService.clearSelectedInstallment();
+    this.selectedInstallment = null;
+    this.mode = 'manual';
+    this.monthlyExtraPayment = 0;
+    this.formattedMonthlyExtraPayment = '';
+    this.clearResults();
   }
 
   formatAmount(value: number): string {

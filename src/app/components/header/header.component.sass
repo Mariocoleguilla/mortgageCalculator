@@ -33,6 +33,20 @@ h1
     background: var(--border-color)
     border-color: var(--text-muted)
 
+.installment-summary
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  background: var(--blue-bg)
+  border: 1px solid var(--blue-border)
+  border-radius: 999px
+  padding: 0.35rem 1rem
+  flex-wrap: wrap
+
+  .installment-icon
+    font-size: 0.85rem
+    flex-shrink: 0
+
 .summary-item
   display: flex
   flex-direction: column
@@ -52,6 +66,9 @@ h1
   font-weight: 700
   color: var(--text-main)
   line-height: 1.2
+
+  &.highlight-blue
+    color: var(--blue-border)
 
 .summary-divider
   color: var(--border-color)

@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FormMortgage } from '../models/form-mortgage/form-mortgage.module';
 
 const SESSION_KEY = 'mortgageFormData';
+const SESSION_KEY_INSTALLMENT = 'mortgageSelectedInstallment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,12 @@ export class MortgageService {
   public formData = new BehaviorSubject<any>({}); // Initial data
   formData$ = this.formData.asObservable(); // Public Observable
 
+  // Persistently selected installment (from amortization table row click)
+  public selectedInstallment = new BehaviorSubject<any>(null);
+  selectedInstallment$ = this.selectedInstallment.asObservable();
+
   constructor() {
-    // Restore data from sessionStorage on startup
+    // Restore mortgage data from sessionStorage on startup
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
@@ -37,6 +42,16 @@ export class MortgageService {
         this._hasMortgageData.next(true);
       } catch {
         sessionStorage.removeItem(SESSION_KEY);
+      }
+    }
+
+    // Restore selected installment from sessionStorage on startup
+    const savedInstallment = sessionStorage.getItem(SESSION_KEY_INSTALLMENT);
+    if (savedInstallment) {
+      try {
+        this.selectedInstallment.next(JSON.parse(savedInstallment));
+      } catch {
+        sessionStorage.removeItem(SESSION_KEY_INSTALLMENT);
       }
     }
   }
@@ -55,5 +70,16 @@ export class MortgageService {
     this.formData.next({});
     sessionStorage.removeItem(SESSION_KEY);
     this._hasMortgageData.next(false);
+    this.clearSelectedInstallment();
+  }
+
+  setSelectedInstallment(installment: any) {
+    this.selectedInstallment.next(installment);
+    sessionStorage.setItem(SESSION_KEY_INSTALLMENT, JSON.stringify(installment));
+  }
+
+  clearSelectedInstallment() {
+    this.selectedInstallment.next(null);
+    sessionStorage.removeItem(SESSION_KEY_INSTALLMENT);
   }
 }

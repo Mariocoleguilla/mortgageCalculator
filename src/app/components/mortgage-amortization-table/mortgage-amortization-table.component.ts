@@ -34,7 +34,7 @@ export class MortgageAmortizationTableComponent {
   onRowClick(row: any): void {
     const destination = this.mortgageService.pendingSimulatorRoute;
     this.mortgageService.pendingSimulatorRoute = '/simulator'; // reset to default
-    this.mortgageService.setFormData({ ...this.formData, selectedInstallment: row });
+    this.mortgageService.setSelectedInstallment(row);
     this.router.navigate([destination]);
   }
 

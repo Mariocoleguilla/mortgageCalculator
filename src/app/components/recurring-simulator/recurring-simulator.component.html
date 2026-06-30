@@ -68,6 +68,15 @@
           <span class="badge-label">Cuotas restantes</span>
           <span class="badge-value">{{ totalPeriods - selectedInstallment.period }}</span>
         </div>
+        @if (currentInterestBefore !== null) {
+          <div class="installment-badge">
+            <span class="badge-label">Intereses sin amortizar</span>
+            <span class="badge-value highlight-red">{{ currentInterestBefore | currency:'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+        }
+        <button class="clear-installment-btn" id="clear-installment-recurring" (click)="clearInstallment()" title="Limpiar cuota seleccionada">
+          ✕ Limpiar cuota
+        </button>
       </div>
     } @else {
       <div class="no-installment-hint">
@@ -94,6 +103,12 @@
         <span class="input-unit">€</span>
       </div>
     </div>
+    @if (currentInterestBefore !== null) {
+      <div class="installment-badge" style="margin-top: 0.75rem;">
+        <span class="badge-label">Intereses sin amortizar</span>
+        <span class="badge-value highlight-red">{{ currentInterestBefore | currency:'EUR':'symbol':'1.2-2' }}</span>
+      </div>
+    }
   }
 
   <!-- Recurring extra payment input -->
@@ -142,13 +157,7 @@
           <span class="result-label">Intereses restantes</span>
           <span class="result-value">{{ interestAfter | currency:'EUR':'symbol':'1.2-2' }}</span>
         </div>
-        @if (interestBefore !== null) {
-          <div class="result-card before">
-            <span class="result-icon">📊</span>
-            <span class="result-label">Intereses sin amortizar</span>
-            <span class="result-value">{{ interestBefore | currency:'EUR':'symbol':'1.2-2' }}</span>
-          </div>
-        }
+
       </div>
     </div>
   }
