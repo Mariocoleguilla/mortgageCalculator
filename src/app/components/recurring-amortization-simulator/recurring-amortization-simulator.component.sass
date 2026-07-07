@@ -71,3 +71,13 @@
     &:disabled
       background-color: color.adjust(#4caf50, $lightness: 30%)
       cursor: not-allowed
+
+@media (max-width: 600px)
+  .simulator-container
+    margin: 1rem auto
+    padding: 1.25rem 1rem
+    
+  .results-summary
+    grid-template-columns: 1fr
+    margin-top: 1.5rem
+    margin-bottom: 1.5rem

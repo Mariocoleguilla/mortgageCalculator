@@ -347,3 +347,47 @@ $border: var(--border-color)
 
   &:hover
     opacity: 0.75
+
+@media (max-width: 680px)
+  .simulator-container
+    padding: 1.25rem 1rem
+    gap: 1.25rem
+
+  .sim-header h2
+    font-size: 1.45rem
+
+  .mortgage-summary-card
+    padding: 1rem
+
+  .summary-row
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 1rem
+    
+  .summary-item
+    align-items: flex-start
+
+  .mode-tabs
+    flex-direction: column
+    gap: 0.5rem
+
+  .mode-tab
+    min-width: 0
+    width: 100%
+
+  .installment-info
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 0.5rem
+
+  .clear-installment-btn
+    grid-column: span 2
+    margin-left: 0
+    text-align: center
+    justify-content: center
+    width: 100%
+    box-sizing: border-box
+
+  .results-grid
+    grid-template-columns: 1fr
+    gap: 0.75rem

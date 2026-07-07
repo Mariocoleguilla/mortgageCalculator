@@ -1,5 +1,7 @@
 <app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="isSidebarOpen = false"></app-sidebar>
 
+<div class="sidebar-overlay" [class.open]="isSidebarOpen" (click)="isSidebarOpen = false"></div>
+
 <div class="main-layout" [class.sidebar-open]="isSidebarOpen">
   <header class="app-header-bar">
     <button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isSidebarOpen">
