@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
 
 @Component({
   selector: 'app-recurring-amortization-simulator',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CurrencyConvertPipe],
   templateUrl: './recurring-amortization-simulator.component.html',
   styleUrls: ['./recurring-amortization-simulator.component.sass']
 })

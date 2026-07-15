@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { CurrencyService, Currency, SUPPORTED_CURRENCIES } from 'src/app/services/currency.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,8 +17,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
   private installmentSub!: Subscription;
 
+  // Currency state
+  readonly currencies: Currency[] = SUPPORTED_CURRENCIES;
+  selectedCurrencyCode: string = 'EUR';
+  isLoadingCurrency = false;
+  currencyError: string | null = null;
+  private currencySub!: Subscription;
+  private loadingSub!: Subscription;
+  private errorSub!: Subscription;
+
   constructor(
     private mortgageService: MortgageService,
+    private currencyService: CurrencyService,
     private router: Router
   ) {}
 
@@ -34,11 +45,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.installmentSub = this.mortgageService.selectedInstallment$.subscribe(inst => {
       this.selectedInstallment = inst;
     });
+
+    // Currency subscriptions
+    this.currencySub = this.currencyService.selectedCurrency$.subscribe(c => {
+      this.selectedCurrencyCode = c.code;
+    });
+    this.loadingSub = this.currencyService.isLoading$.subscribe(l => {
+      this.isLoadingCurrency = l;
+    });
+    this.errorSub = this.currencyService.error$.subscribe(e => {
+      this.currencyError = e;
+    });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.installmentSub?.unsubscribe();
+    this.currencySub?.unsubscribe();
+    this.loadingSub?.unsubscribe();
+    this.errorSub?.unsubscribe();
   }
 
   goHome(): void {
@@ -64,6 +89,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.updateTheme();
+  }
+
+  onCurrencyChange(event: Event): void {
+    const code = (event.target as HTMLSelectElement).value;
+    this.currencyService.changeCurrency(code);
   }
 
   private updateTheme(): void {

@@ -16,7 +16,7 @@
             <label for="monthlySalary">Sueldo neto mensual</label>
             <div class="input-wrapper">
               <input id="monthlySalary" type="number" formControlName="monthlySalary" placeholder="Ej: 2200" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
             @if (savingsForm.get('monthlySalary')?.invalid && savingsForm.get('monthlySalary')?.touched) {
               <div class="field-error">
@@ -34,7 +34,7 @@
             <label for="community">Gastos de Comunidad</label>
             <div class="input-wrapper">
               <input id="community" type="number" formControlName="community" placeholder="Ej: 60" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -42,7 +42,7 @@
             <label for="electricity">Electricidad (Luz)</label>
             <div class="input-wrapper">
               <input id="electricity" type="number" formControlName="electricity" placeholder="Ej: 70" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
             <label for="gas">Gas / Calefacción</label>
             <div class="input-wrapper">
               <input id="gas" type="number" formControlName="gas" placeholder="Ej: 40" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -58,7 +58,7 @@
             <label for="water">Agua</label>
             <div class="input-wrapper">
               <input id="water" type="number" formControlName="water" placeholder="Ej: 20" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -66,7 +66,7 @@
             <label for="internet">Internet / Teléfono</label>
             <div class="input-wrapper">
               <input id="internet" type="number" formControlName="internet" placeholder="Ej: 35" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
             <label for="homeInsurance">Seguro de hogar (anual)</label>
             <div class="input-wrapper">
               <input id="homeInsurance" type="number" formControlName="homeInsurance" placeholder="Ej: 240" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
             <label for="ibi">IBI (Impuesto sobre Bienes Inmuebles anual)</label>
             <div class="input-wrapper">
               <input id="ibi" type="number" formControlName="ibi" placeholder="Ej: 450" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
 
@@ -96,7 +96,7 @@
             <label for="garbage">Tasa de basuras (anual)</label>
             <div class="input-wrapper">
               <input id="garbage" type="number" formControlName="garbage" placeholder="Ej: 90" min="0" />
-              <span class="input-unit">€</span>
+              <span class="input-unit">{{ currencySymbol }}</span>
             </div>
           </div>
         </div>
@@ -131,11 +131,11 @@
       <div class="salary-vs-expenses">
         <div class="balance-card positive">
           <span class="balance-label">Ingresos Netos</span>
-          <span class="balance-value">+ {{ formatAmount(displaySalary) }} €</span>
+          <span class="balance-value">+ {{ displaySalary | currencyConvert }}</span>
         </div>
         <div class="balance-card negative">
           <span class="balance-label">Gastos Totales</span>
-          <span class="balance-value">- {{ formatAmount(displayTotalExpenses) }} €</span>
+          <span class="balance-value">- {{ displayTotalExpenses | currencyConvert }}</span>
         </div>
       </div>
 
@@ -162,33 +162,33 @@
         <h4>Desglose detallado ({{ isAnnualView ? 'Anual' : 'Mensual' }})</h4>
         
         <div class="breakdown-item row-salary">
-          <span>Ingreso neto mensual</span>
-          <span class="val-plus">{{ formatAmount(displaySalary) }} €</span>
+          <span>Ingreso neto {{ isAnnualView ? 'anual' : 'mensual' }}</span>
+          <span class="val-plus">{{ displaySalary | currencyConvert }}</span>
         </div>
 
         <div class="breakdown-item row-mortgage">
           <div class="label-with-hint">
             <span>Cuota Hipoteca</span>
             <small class="row-hint">
-              Basado en hipoteca de {{ formatAmount(mortgageAmount) }} € al {{ interestRate }}%
+              Basado en hipoteca de {{ mortgageAmount | currencyConvert }} al {{ interestRate }}%
             </small>
           </div>
-          <span class="val-minus">- {{ formatAmount(displayMortgage) }} €</span>
+          <span class="val-minus">- {{ displayMortgage | currencyConvert }}</span>
         </div>
 
         <div class="breakdown-item">
           <span>Suministros y Comunidad</span>
-          <span class="val-minus">- {{ formatAmount(displaySupplies) }} €</span>
+          <span class="val-minus">- {{ displaySupplies | currencyConvert }}</span>
         </div>
 
         <div class="breakdown-item">
           <span>Seguros e Impuestos</span>
-          <span class="val-minus">- {{ formatAmount(displayTaxesInsurance) }} €</span>
+          <span class="val-minus">- {{ displayTaxesInsurance | currencyConvert }}</span>
         </div>
 
         <div class="breakdown-total" [class.negative]="displaySavings < 0">
           <span>Dinero Sobrante (Ahorro)</span>
-          <span class="total-val">{{ displaySavings > 0 ? '+' : '' }} {{ formatAmount(displaySavings) }} €</span>
+          <span class="total-val">{{ displaySavings > 0 ? '+' : '' }} {{ displaySavings | currencyConvert }}</span>
         </div>
       </div>
 
@@ -201,7 +201,7 @@
             <span class="advice-icon">🚨</span>
             <div class="advice-content">
               <strong>Balance en Negativo</strong>
-              <p>Tus gastos mensuales superan tus ingresos netos por <strong>{{ formatAmount(absoluteDisplaySavings) }} €</strong>. Es crucial revisar tus gastos y buscar áreas para reducirlos de inmediato.</p>
+              <p>Tus gastos mensuales superan tus ingresos netos por <strong>{{ absoluteDisplaySavings | currencyConvert }}</strong>. Es crucial revisar tus gastos y buscar áreas para reducirlos de inmediato.</p>
             </div>
           </div>
         }

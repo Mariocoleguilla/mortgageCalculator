@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { CurrencyService } from 'src/app/services/currency.service';
+import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
 
 type InputMode = 'installment' | 'manual';
 
 @Component({
   selector: 'app-recurring-simulator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe],
   templateUrl: './recurring-simulator.component.html',
   styleUrls: ['./recurring-simulator.component.sass']
 })
@@ -48,8 +50,13 @@ export class RecurringSimulatorComponent implements OnInit, OnDestroy {
   interestSavings: number | null = null;
 
   private installmentSub!: Subscription;
+  private currencySub!: Subscription;
 
-  constructor(private mortgageService: MortgageService, private router: Router) {}
+  constructor(
+    private mortgageService: MortgageService,
+    private currencyService: CurrencyService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const data = this.mortgageService.formData.value;
@@ -77,10 +84,16 @@ export class RecurringSimulatorComponent implements OnInit, OnDestroy {
         this.clearResults();
       }
     });
+
+    // Subscribe to currency updates
+    this.currencySub = this.currencyService.exchangeRate$.subscribe(() => {
+      this.onInputChange();
+    });
   }
 
   ngOnDestroy(): void {
     this.installmentSub?.unsubscribe();
+    this.currencySub?.unsubscribe();
   }
 
   computeBaseValues(): void {
@@ -194,5 +207,38 @@ export class RecurringSimulatorComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.router.navigate(['/features']);
+  }
+
+  // Currency helpers
+  get exchangeRate(): number {
+    return this.currencyService.exchangeRate;
+  }
+
+  get currencySymbol(): string {
+    return this.currencyService.currentCurrency.symbol;
+  }
+
+  get amountInCurrency(): number {
+    return this.amount * this.exchangeRate;
+  }
+
+  get manualRemainingCapitalInCurrency(): number | null {
+    return this.manualRemainingCapital !== null
+      ? this.manualRemainingCapital * this.exchangeRate
+      : null;
+  }
+
+  onManualCapitalChange(val: number): void {
+    this.manualRemainingCapital = val ? val / this.exchangeRate : null;
+    this.onInputChange();
+  }
+
+  get monthlyExtraPaymentInCurrency(): number {
+    return this.monthlyExtraPayment * this.exchangeRate;
+  }
+
+  onMonthlyExtraChange(val: number): void {
+    this.monthlyExtraPayment = val ? val / this.exchangeRate : 0;
+    this.onInputChange();
   }
 }

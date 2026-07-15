@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormMortgage } from '../models/form-mortgage/form-mortgage.module';
+import { AuthService } from './auth.service';
+import { DbService } from './db.service';
 
 const SESSION_KEY = 'mortgageFormData';
 const SESSION_KEY_INSTALLMENT = 'mortgageSelectedInstallment';
@@ -37,7 +38,10 @@ export class MortgageService {
   public savingsData = new BehaviorSubject<any>(null);
   savingsData$ = this.savingsData.asObservable();
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private dbService: DbService
+  ) {
     // Restore mortgage data from sessionStorage on startup
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
@@ -69,12 +73,43 @@ export class MortgageService {
         sessionStorage.removeItem(SESSION_KEY_SAVINGS);
       }
     }
+
+    // Sync Firestore data when user authentication state changes
+    this.authService.user$.subscribe(async (user) => {
+      if (user) {
+        // Logged in!
+        const cloudData = await this.dbService.getUserData(user.uid);
+        if (cloudData) {
+          if (cloudData.mortgage && cloudData.mortgage.amount) {
+            this.formData.next(cloudData.mortgage);
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify(cloudData.mortgage));
+            this._hasMortgageData.next(true);
+          } else if (this.formData.value && this.formData.value.amount) {
+            // Firestore is empty but local has data, upload it
+            await this.dbService.saveMortgageData(user.uid, this.formData.value);
+          }
+
+          if (cloudData.savings) {
+            this.savingsData.next(cloudData.savings);
+            sessionStorage.setItem(SESSION_KEY_SAVINGS, JSON.stringify(cloudData.savings));
+          } else if (this.savingsData.value) {
+            // Firestore is empty but local has data, upload it
+            await this.dbService.saveSavingsData(user.uid, this.savingsData.value);
+          }
+        }
+      }
+    });
   }
 
   setFormData(data: any) {
     this.formData.next(data); // Update form data
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
     this._hasMortgageData.next(true);
+
+    const user = this.authService.currentUser;
+    if (user) {
+      this.dbService.saveMortgageData(user.uid, data);
+    }
   }
 
   get hasMortgageData(): boolean {
@@ -82,11 +117,12 @@ export class MortgageService {
   }
 
   clearFormData() {
-    this.formData.next({});
-    sessionStorage.removeItem(SESSION_KEY);
-    this._hasMortgageData.next(false);
-    this.clearSelectedInstallment();
-    this.clearSavingsData();
+    this.clearLocalData();
+    const user = this.authService.currentUser;
+    if (user) {
+      this.dbService.saveMortgageData(user.uid, {});
+      this.dbService.saveSavingsData(user.uid, null);
+    }
   }
 
   setSelectedInstallment(installment: any) {
@@ -102,9 +138,28 @@ export class MortgageService {
   setSavingsData(data: any) {
     this.savingsData.next(data);
     sessionStorage.setItem(SESSION_KEY_SAVINGS, JSON.stringify(data));
+
+    const user = this.authService.currentUser;
+    if (user) {
+      this.dbService.saveSavingsData(user.uid, data);
+    }
   }
 
   clearSavingsData() {
+    this.savingsData.next(null);
+    sessionStorage.removeItem(SESSION_KEY_SAVINGS);
+    
+    const user = this.authService.currentUser;
+    if (user) {
+      this.dbService.saveSavingsData(user.uid, null);
+    }
+  }
+
+  clearLocalData() {
+    this.formData.next({});
+    sessionStorage.removeItem(SESSION_KEY);
+    this._hasMortgageData.next(false);
+    this.clearSelectedInstallment();
     this.savingsData.next(null);
     sessionStorage.removeItem(SESSION_KEY_SAVINGS);
   }

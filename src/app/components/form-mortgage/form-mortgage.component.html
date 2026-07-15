@@ -15,16 +15,19 @@
   <form [formGroup]="mortgageForm" class="mortgage-form">
     <!-- Field: Amount -->
     <div class="form-field">
-      <label for="amount">Importe a financiar</label>
-      <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
-        placeholder="Ej: 140.000" />
+      <label for="amount">Importe a financiar ({{ currencyCode }})</label>
+      <div class="input-amount-wrapper">
+        <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
+          placeholder="Ej: 140.000" />
+        <span class="input-currency-badge">{{ currencySymbol }}</span>
+      </div>
       @if (mortgageForm.get('amount')?.invalid && mortgageForm.get('amount')?.touched) {
       <div class="field-error">
         @if (mortgageForm.get('amount')?.errors?.['required']) {
         <small>Este campo es obligatorio</small>
         }
         @if (mortgageForm.get('amount')?.errors?.['min']) {
-        <small>El importe mínimo es 1.000 €</small>
+        <small>El importe mínimo es 1.000 {{ currencySymbol }}</small>
         }
       </div>
       }

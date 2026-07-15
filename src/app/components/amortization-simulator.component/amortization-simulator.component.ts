@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { CurrencyService } from 'src/app/services/currency.service';
+import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
 
 type InputMode = 'installment' | 'manual';
 
 @Component({
   selector: 'app-amortization-simulator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe],
   templateUrl: './amortization-simulator.component.html',
   styleUrls: ['./amortization-simulator.component.sass']
 })
@@ -46,8 +48,13 @@ export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
   interestSavings: number | null = null;
 
   private installmentSub!: Subscription;
+  private currencySub!: Subscription;
 
-  constructor(private mortgageService: MortgageService, private router: Router) {}
+  constructor(
+    private mortgageService: MortgageService,
+    private currencyService: CurrencyService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const data = this.mortgageService.formData.value;
@@ -75,10 +82,23 @@ export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
         this.clearResults();
       }
     });
+
+    // Subscribe to currency changes
+    this.currencySub = this.currencyService.exchangeRate$.subscribe(() => {
+      const rate = this.currencyService.exchangeRate;
+      if (this.manualRemainingCapital) {
+        this.formattedManualCapital = this.formatNumber(Math.round(this.manualRemainingCapital * rate));
+      }
+      if (this.extraPayment) {
+        this.formattedExtraPayment = this.formatNumber(Math.round(this.extraPayment * rate));
+      }
+      this.runSimulation();
+    });
   }
 
   ngOnDestroy(): void {
     this.installmentSub?.unsubscribe();
+    this.currencySub?.unsubscribe();
   }
 
   computeBaseValues(): void {
@@ -205,14 +225,14 @@ export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
 
   onManualCapitalInput(event: any): void {
     this.formattedManualCapital = this.handleNumericInput(event, (val) => {
-      this.manualRemainingCapital = val || null;
+      this.manualRemainingCapital = val ? val / this.currencyService.exchangeRate : null;
     });
     this.runSimulation();
   }
 
   onExtraPaymentInput(event: any): void {
     this.formattedExtraPayment = this.handleNumericInput(event, (val) => {
-      this.extraPayment = val;
+      this.extraPayment = val ? val / this.currencyService.exchangeRate : 0;
     });
     this.runSimulation();
   }
@@ -245,5 +265,9 @@ export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.router.navigate(['/features']);
+  }
+
+  get currencySymbol(): string {
+    return this.currencyService.currentCurrency.symbol;
   }
 }

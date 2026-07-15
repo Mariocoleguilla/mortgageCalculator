@@ -4,11 +4,11 @@
   <div class="kpi-strip">
     <div class="kpi-card">
       <span class="kpi-label">Cuota mensual</span>
-      <span class="kpi-value">{{ this.monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</span>
+      <span class="kpi-value">{{ this.monthlyFee | currencyConvert }}</span>
     </div>
     <div class="kpi-card highlight">
       <span class="kpi-label">Total intereses en {{ this.formData.years }} años</span>
-      <span class="kpi-value">{{ this.totalFees | currency:'EUR':'symbol':'1.2-2' }}</span>
+      <span class="kpi-value">{{ this.totalFees | currencyConvert }}</span>
     </div>
     <div class="kpi-hint">
       <span class="kpi-hint-icon">💡</span>
@@ -34,11 +34,11 @@
           @for (row of this.tableData; track row) {
             <tr (click)="onRowClick(row)" class="table-row">
               <td>{{ row.period }}</td>
-              <td>{{ row.monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</td>
-              <td>{{ row.fees | currency:'EUR':'symbol':'1.2-2' }}</td>
-              <td>{{ row.capital | currency:'EUR':'symbol':'1.2-2' }}</td>
-              <td>{{ row.amortization | currency:'EUR':'symbol':'1.2-2' }}</td>
-              <td>{{ row.remainingCapital | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ row.monthlyFee | currencyConvert }}</td>
+              <td>{{ row.fees | currencyConvert }}</td>
+              <td>{{ row.capital | currencyConvert }}</td>
+              <td>{{ row.amortization | currencyConvert }}</td>
+              <td>{{ row.remainingCapital | currencyConvert }}</td>
             </tr>
           }
         </tbody>
