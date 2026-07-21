@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyService } from 'src/app/services/currency.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,15 +19,18 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   mortgageForm: FormGroup;
   formattedAmount: string = '';
   showWarning = false;
+  user: any = null;
   private warningSubscription!: Subscription;
   private currencySub!: Subscription;
+  private authSub!: Subscription;
   private previousRate = 1;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private mortgageService: MortgageService,
-    private currencyService: CurrencyService
+    private currencyService: CurrencyService,
+    private authService: AuthService
   ) {
     this.mortgageForm = this.fb.group({
       amount: [null, [Validators.required, Validators.min(1000)]],
@@ -43,6 +47,10 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
         this.showWarning = true;
         this.mortgageService.setNeedsMortgageDataWarning(false);
       }
+    });
+
+    this.authSub = this.authService.user$.subscribe(u => {
+      this.user = u;
     });
 
     // Load existing data from session if available
@@ -133,6 +141,15 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.warningSubscription?.unsubscribe();
     this.currencySub?.unsubscribe();
+    this.authSub?.unsubscribe();
+  }
+
+  async login(): Promise<void> {
+    try {
+      await this.authService.loginWithGoogle();
+    } catch (err) {
+      console.error('Login error from mortgage form:', err);
+    }
   }
 
   get currencySymbol(): string {

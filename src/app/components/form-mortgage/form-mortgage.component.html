@@ -4,6 +4,21 @@
     <p class="subtitle">Introduce los datos de tu hipoteca para acceder a todas las herramientas de análisis</p>
   </div>
 
+  @if (!user) {
+    <div class="cloud-sync-banner">
+      <div class="banner-content">
+        <span class="banner-icon">☁️</span>
+        <div class="banner-text">
+          <strong>Guarda tus datos en la nube</strong>
+          <p>Inicia sesión con Google para guardar tus simulaciones y sincronizarlas en cualquier dispositivo.</p>
+        </div>
+      </div>
+      <button type="button" class="banner-login-btn" (click)="login()">
+        Iniciar sesión con Google
+      </button>
+    </div>
+  }
+
   @if (showWarning) {
   <div class="warning-banner" role="alert">
     <span class="warning-icon">⚠️</span>
