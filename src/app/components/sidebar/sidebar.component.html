@@ -1,4 +1,22 @@
 <nav class="sidebar" [class.open]="isOpen">
+  <!-- USER SESSION BANNER -->
+  <div class="sidebar-user-section">
+    @if (user) {
+      <div class="user-profile">
+        <img class="user-avatar" [src]="user.photoURL || 'https://api.dicebear.com/7.x/adventurer/svg?seed=user'" alt="Avatar" />
+        <div class="user-info">
+          <span class="user-name">{{ user.displayName }}</span>
+          <span class="user-email">{{ user.email }}</span>
+        </div>
+        <button class="logout-btn" (click)="logout()" title="Cerrar sesión">✕</button>
+      </div>
+    } @else {
+      <button class="login-google-btn" (click)="login()">
+        <span class="google-icon">🔑</span> Iniciar sesión
+      </button>
+    }
+  </div>
+
   <div class="sidebar-header">
     <h3>🚀 Features</h3>
   </div>

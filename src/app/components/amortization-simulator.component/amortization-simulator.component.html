@@ -10,7 +10,7 @@
     <div class="summary-row">
       <div class="summary-item">
         <span class="summary-label">Capital inicial</span>
-        <span class="summary-value">{{ formatAmount(amount) }} €</span>
+        <span class="summary-value">{{ amount | currencyConvert }}</span>
       </div>
       <div class="summary-item">
         <span class="summary-label">Interés</span>
@@ -22,11 +22,11 @@
       </div>
       <div class="summary-item">
         <span class="summary-label">Cuota mensual actual</span>
-        <span class="summary-value">{{ monthlyFee | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <span class="summary-value">{{ monthlyFee | currencyConvert }}</span>
       </div>
       <div class="summary-item">
         <span class="summary-label">Total intereses</span>
-        <span class="summary-value highlight-red">{{ totalInterest | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <span class="summary-value highlight-red">{{ totalInterest | currencyConvert }}</span>
       </div>
     </div>
   </div>
@@ -56,8 +56,7 @@
     </div>
     <div class="installment-badge">
       <span class="badge-label">Capital pendiente</span>
-      <span class="badge-value highlight-blue">{{ selectedInstallment.remainingCapital | currency:'EUR':'symbol':'1.2-2'
-        }}</span>
+      <span class="badge-value highlight-blue">{{ selectedInstallment.remainingCapital | currencyConvert }}</span>
     </div>
     <div class="installment-badge">
       <span class="badge-label">Cuotas restantes</span>
@@ -66,7 +65,7 @@
     @if (currentInterestBefore !== null) {
     <div class="installment-badge">
       <span class="badge-label">Intereses sin amortizar</span>
-      <span class="badge-value highlight-red">{{ currentInterestBefore | currency:'EUR':'symbol':'1.2-2' }}</span>
+      <span class="badge-value highlight-red">{{ currentInterestBefore | currencyConvert }}</span>
     </div>
     }
     <button class="clear-installment-btn" id="clear-installment" (click)="clearInstallment()" title="Limpiar cuota seleccionada">
@@ -89,7 +88,7 @@
     <div class="input-wrapper">
       <input type="text" id="manualCapital" [value]="formattedManualCapital" (input)="onManualCapitalInput($event)"
         placeholder="Ej: 120.000" />
-      <span class="input-unit">€</span>
+      <span class="input-unit">{{ currencySymbol }}</span>
     </div>
   </div>
   @if (currentInterestBefore !== null) {
@@ -107,7 +106,7 @@
     <div class="input-wrapper">
       <input type="text" id="extraPayment" [value]="formattedExtraPayment" (input)="onExtraPaymentInput($event)"
         placeholder="Cantidad a amortizar de golpe" />
-      <span class="input-unit">€</span>
+      <span class="input-unit">{{ currencySymbol }}</span>
     </div>
   </div>
   }
@@ -120,7 +119,7 @@
       <div class="result-card saving">
         <span class="result-icon">💰</span>
         <span class="result-label">Ahorro en intereses</span>
-        <span class="result-value">{{ interestSavings | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <span class="result-value">{{ interestSavings | currencyConvert }}</span>
       </div>
       <div class="result-card time">
         <span class="result-icon">⏱️</span>
@@ -133,7 +132,7 @@
       <div class="result-card interest">
         <span class="result-icon">📉</span>
         <span class="result-label">Intereses restantes</span>
-        <span class="result-value">{{ interestAfter | currency:'EUR':'symbol':'1.2-2' }}</span>
+        <span class="result-value">{{ interestAfter | currencyConvert }}</span>
       </div>
 
     </div>

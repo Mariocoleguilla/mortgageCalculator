@@ -4,6 +4,21 @@
     <p class="subtitle">Introduce los datos de tu hipoteca para acceder a todas las herramientas de análisis</p>
   </div>
 
+  @if (!user) {
+    <div class="cloud-sync-banner">
+      <div class="banner-content">
+        <span class="banner-icon">☁️</span>
+        <div class="banner-text">
+          <strong>Guarda tus datos en la nube</strong>
+          <p>Inicia sesión con Google para guardar tus simulaciones y sincronizarlas en cualquier dispositivo.</p>
+        </div>
+      </div>
+      <button type="button" class="banner-login-btn" (click)="login()">
+        Iniciar sesión con Google
+      </button>
+    </div>
+  }
+
   @if (showWarning) {
   <div class="warning-banner" role="alert">
     <span class="warning-icon">⚠️</span>
@@ -15,16 +30,19 @@
   <form [formGroup]="mortgageForm" class="mortgage-form">
     <!-- Field: Amount -->
     <div class="form-field">
-      <label for="amount">Importe a financiar</label>
-      <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
-        placeholder="Ej: 140.000" />
+      <label for="amount">Importe a financiar ({{ currencyCode }})</label>
+      <div class="input-amount-wrapper">
+        <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
+          placeholder="Ej: 140.000" />
+        <span class="input-currency-badge">{{ currencySymbol }}</span>
+      </div>
       @if (mortgageForm.get('amount')?.invalid && mortgageForm.get('amount')?.touched) {
       <div class="field-error">
         @if (mortgageForm.get('amount')?.errors?.['required']) {
         <small>Este campo es obligatorio</small>
         }
         @if (mortgageForm.get('amount')?.errors?.['min']) {
-        <small>El importe mínimo es 1.000 €</small>
+        <small>El importe mínimo es 1.000 {{ currencySymbol }}</small>
         }
       </div>
       }

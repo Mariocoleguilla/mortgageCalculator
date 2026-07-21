@@ -5,6 +5,64 @@
   width: 100%
   flex-wrap: wrap
 
+.header-actions
+  margin-left: auto
+  display: flex
+  align-items: center
+  gap: 0.75rem
+  flex-shrink: 0
+
+.currency-selector-wrapper
+  position: relative
+  display: flex
+  align-items: center
+  gap: 0.35rem
+
+.currency-select
+  appearance: none
+  background: var(--hover-bg)
+  border: 1px solid var(--border-color)
+  border-radius: 8px
+  padding: 0.35rem 0.7rem
+  font-size: 0.85rem
+  font-weight: 600
+  color: var(--text-main)
+  cursor: pointer
+  transition: all 0.2s ease
+  outline: none
+  min-width: 90px
+
+  &:hover
+    border-color: var(--text-muted)
+    background: var(--border-color)
+
+  &:focus
+    border-color: #4caf50
+
+  html.dark &
+    background: var(--hover-bg)
+    color: var(--text-main)
+
+.currency-spinner
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  width: 90px
+  font-size: 1.2rem
+  color: var(--text-muted)
+  animation: spin 1s linear infinite
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
+.currency-error-dot
+  font-size: 0.85rem
+  color: #f59e0b
+  cursor: help
+
 h1
   margin: 0
   font-size: 1.25rem
@@ -94,7 +152,6 @@ h1
     color: #ef4444
 
 .theme-toggle-btn
-  margin-left: auto
   background-color: var(--hover-bg)
   border: 1px solid var(--border-color)
   color: var(--text-main)

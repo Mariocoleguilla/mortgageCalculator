@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MortgageService } from 'src/app/services/mortgage.service';
+import { CurrencyService } from 'src/app/services/currency.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,12 +19,18 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   mortgageForm: FormGroup;
   formattedAmount: string = '';
   showWarning = false;
+  user: any = null;
   private warningSubscription!: Subscription;
+  private currencySub!: Subscription;
+  private authSub!: Subscription;
+  private previousRate = 1;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private mortgageService: MortgageService
+    private mortgageService: MortgageService,
+    private currencyService: CurrencyService,
+    private authService: AuthService
   ) {
     this.mortgageForm = this.fb.group({
       amount: [null, [Validators.required, Validators.min(1000)]],
@@ -41,17 +49,38 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.authSub = this.authService.user$.subscribe(u => {
+      this.user = u;
+    });
+
     // Load existing data from session if available
     const existing = this.mortgageService.formData.value;
+    const rate = this.currencyService.exchangeRate;
     if (existing && existing.amount) {
+      const amountInCurrency = Math.round(existing.amount * rate);
       this.mortgageForm.patchValue({
-        amount: existing.amount,
+        amount: amountInCurrency,
         interestRate: existing.interestRate,
         years: existing.years,
         periodsPerYear: existing.periodsPerYear ?? 12,
       });
-      this.formattedAmount = this.formatNumber(existing.amount);
+      this.formattedAmount = this.formatNumber(amountInCurrency);
     }
+
+    this.previousRate = rate;
+
+    // Listen to currency changes to convert the typed amount in real-time
+    this.currencySub = this.currencyService.exchangeRate$.subscribe(newRate => {
+      if (newRate === this.previousRate) return;
+
+      const currentAmount = this.mortgageForm.get('amount')?.value;
+      if (currentAmount) {
+        const newAmount = Math.round((currentAmount / this.previousRate) * newRate);
+        this.mortgageForm.patchValue({ amount: newAmount }, { emitEvent: false });
+        this.formattedAmount = this.formatNumber(newAmount);
+      }
+      this.previousRate = newRate;
+    });
   }
 
   formatNumber(value: number | string): string {
@@ -100,12 +129,34 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   }
 
   submitForm(): void {
-    const formData = this.mortgageForm.value;
+    const formData = { ...this.mortgageForm.value };
+    if (formData.amount) {
+      // Convert user input in active currency back to base EUR
+      formData.amount = this.currencyService.convertToBase(formData.amount);
+    }
     this.mortgageService.setFormData(formData);
     this.router.navigate(['/features']);
   }
 
   ngOnDestroy(): void {
     this.warningSubscription?.unsubscribe();
+    this.currencySub?.unsubscribe();
+    this.authSub?.unsubscribe();
+  }
+
+  async login(): Promise<void> {
+    try {
+      await this.authService.loginWithGoogle();
+    } catch (err) {
+      console.error('Login error from mortgage form:', err);
+    }
+  }
+
+  get currencySymbol(): string {
+    return this.currencyService.currentCurrency.symbol;
+  }
+
+  get currencyCode(): string {
+    return this.currencyService.currentCurrency.code;
   }
 }

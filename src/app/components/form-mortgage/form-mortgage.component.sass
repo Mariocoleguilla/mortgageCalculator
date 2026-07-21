@@ -23,6 +23,62 @@ $error-color: #ef4444
     color: var(--text-muted)
     margin: 0
 
+.cloud-sync-banner
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 1rem
+  padding: 1rem 1.25rem
+  background-color: var(--card-bg)
+  border: 1.5px solid #4caf50
+  border-radius: 12px
+  margin-bottom: 1.5rem
+  box-shadow: var(--shadow-sm)
+
+  .banner-content
+    display: flex
+    align-items: center
+    gap: 0.875rem
+
+  .banner-icon
+    font-size: 1.5rem
+    flex-shrink: 0
+
+  .banner-text
+    strong
+      display: block
+      font-size: 0.95rem
+      color: var(--text-main)
+      margin-bottom: 0.2rem
+    p
+      margin: 0
+      font-size: 0.825rem
+      color: var(--text-muted)
+
+  .banner-login-btn
+    background-color: #4caf50
+    color: #ffffff
+    border: none
+    padding: 0.55rem 1rem
+    font-size: 0.85rem
+    font-weight: 700
+    border-radius: 8px
+    cursor: pointer
+    white-space: nowrap
+    flex-shrink: 0
+    transition: background-color 0.2s
+
+    &:hover
+      background-color: #3e8e41
+
+@media (max-width: 600px)
+  .cloud-sync-banner
+    flex-direction: column
+    align-items: flex-start
+    .banner-login-btn
+      width: 100%
+      margin-top: 0.5rem
+
 .warning-banner
   display: flex
   align-items: center
@@ -92,6 +148,23 @@ $error-color: #ef4444
     &:focus
       border-color: $primary-color
       background: var(--card-bg)
+
+.input-amount-wrapper
+  position: relative
+  display: flex
+  align-items: center
+
+  input
+    padding-right: 2.75rem
+
+  .input-currency-badge
+    position: absolute
+    right: 0.75rem
+    font-size: 0.9rem
+    font-weight: 700
+    color: var(--text-muted)
+    pointer-events: none
+    user-select: none
 
 .field-error
   margin-top: 0.3rem

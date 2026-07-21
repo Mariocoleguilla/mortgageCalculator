@@ -17,6 +17,7 @@ import { RecurringAmortizationFormComponent } from './components/recurring-amort
 import { RecurringAmortizationSimulatorComponent } from './components/recurring-amortization-simulator/recurring-amortization-simulator.component';
 import { FeaturesComponent } from './components/features/features.component';
 import { SavingsCalculatorComponent } from './components/savings-calculator/savings-calculator.component';
+import { CurrencyConvertPipe } from './pipes/currency-convert.pipe';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { SavingsCalculatorComponent } from './components/savings-calculator/savi
     RecurringAmortizationSimulatorComponent,
     SidebarComponent,
     FeaturesComponent,
-    SavingsCalculatorComponent
+    SavingsCalculatorComponent,
+    CurrencyConvertPipe
   ],
   providers: [],
   bootstrap: [AppComponent]
