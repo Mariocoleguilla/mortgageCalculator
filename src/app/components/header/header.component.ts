@@ -93,6 +93,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onCurrencyChange(event: Event): void {
     const code = (event.target as HTMLSelectElement).value;
+    this.selectedCurrencyCode = code;
     this.currencyService.changeCurrency(code);
   }
 

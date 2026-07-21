@@ -50,7 +50,7 @@
         <select
           id="currency-select"
           class="currency-select"
-          [value]="selectedCurrencyCode"
+          [ngModel]="selectedCurrencyCode"
           (change)="onCurrencyChange($event)"
           [disabled]="isLoadingCurrency"
           aria-label="Seleccionar divisa">

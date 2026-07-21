@@ -17,6 +17,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'MXN', name: 'Peso mexicano', symbol: '$', flag: '🇲🇽' },
   { code: 'BRL', name: 'Real brasileño', symbol: 'R$', flag: '🇧🇷' },
   { code: 'COP', name: 'Peso colombiano', symbol: '$', flag: '🇨🇴' },
+  { code: 'PLN', name: 'Złoty polaco', symbol: 'zł', flag: '🇵🇱' },
 ];
 
 interface CachedRate {
