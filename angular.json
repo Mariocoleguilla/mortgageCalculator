@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "baseHref": "/local/mortgageCalculator/",
+            "baseHref": "/",
             "outputPath": {
               "base": "dist/mortgageCalculator"
             },
