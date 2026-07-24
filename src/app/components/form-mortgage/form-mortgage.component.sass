@@ -56,9 +56,12 @@ $error-color: #ef4444
       color: var(--text-muted)
 
   .banner-login-btn
-    background-color: #4caf50
-    color: #ffffff
-    border: none
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: #ffffff
+    color: #3c4043
+    border: 1px solid #dadce0
     padding: 0.55rem 1rem
     font-size: 0.85rem
     font-weight: 700
@@ -66,10 +69,18 @@ $error-color: #ef4444
     cursor: pointer
     white-space: nowrap
     flex-shrink: 0
-    transition: background-color 0.2s
+    transition: all 0.2s ease-in-out
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.30), 0 1px 3px 1px rgba(60,64,67,0.15)
 
     &:hover
-      background-color: #3e8e41
+      background-color: #f8f9fa
+      border-color: #d2e3fc
+      color: #1a73e8
+
+    .google-logo
+      width: 16px
+      height: 16px
+      flex-shrink: 0
 
 @media (max-width: 600px)
   .cloud-sync-banner
