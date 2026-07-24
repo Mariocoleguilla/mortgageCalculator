@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { FormMortgage } from 'src/app/models/form-mortgage/form-mortgage.module';
 import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
+import { BackButtonComponent } from 'src/app/components/back-button/back-button.component';
 
 @Component({
     selector: 'app-mortgage-amortization-table',
     standalone: true,
-    imports: [CommonModule, CurrencyConvertPipe],
+    imports: [CommonModule, CurrencyConvertPipe, BackButtonComponent],
     templateUrl: './mortgage-amortization-table.component.html',
     styleUrls: ['./mortgage-amortization-table.component.sass']
 })

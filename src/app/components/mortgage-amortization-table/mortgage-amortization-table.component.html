@@ -1,4 +1,7 @@
 <div class="table-page">
+  <div class="table-actions-top">
+    <app-back-button></app-back-button>
+  </div>
 
   <!-- KPI summary strip -->
   <div class="kpi-strip">
@@ -18,32 +21,32 @@
 
   <!-- Amortization table -->
   @if (this.tableData.length > 0) {
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Nº Cuota</th>
-            <th>Cuota</th>
-            <th>Interés</th>
-            <th>Capital</th>
-            <th>Amortización</th>
-            <th>Capital Restante</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of this.tableData; track row) {
-            <tr (click)="onRowClick(row)" class="table-row">
-              <td>{{ row.period }}</td>
-              <td>{{ row.monthlyFee | currencyConvert }}</td>
-              <td>{{ row.fees | currencyConvert }}</td>
-              <td>{{ row.capital | currencyConvert }}</td>
-              <td>{{ row.amortization | currencyConvert }}</td>
-              <td>{{ row.remainingCapital | currencyConvert }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Nº Cuota</th>
+          <th>Cuota</th>
+          <th>Interés</th>
+          <th>Capital</th>
+          <th>Amortización</th>
+          <th>Capital Restante</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of this.tableData; track row) {
+        <tr (click)="onRowClick(row)" class="table-row">
+          <td>{{ row.period }}</td>
+          <td>{{ row.monthlyFee | currencyConvert }}</td>
+          <td>{{ row.fees | currencyConvert }}</td>
+          <td>{{ row.capital | currencyConvert }}</td>
+          <td>{{ row.amortization | currencyConvert }}</td>
+          <td>{{ row.remainingCapital | currencyConvert }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 
 </div>

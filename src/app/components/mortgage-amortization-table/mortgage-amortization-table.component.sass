@@ -6,7 +6,6 @@ $hover-bg: var(--hover-bg)
 $even-row-bg: var(--even-row-bg)
 $font-color: var(--text-main)
 
-// ---- Page wrapper ----
 .table-page
   max-width: 1100px
   margin: 0 auto
@@ -14,6 +13,28 @@ $font-color: var(--text-main)
   display: flex
   flex-direction: column
   gap: 1.5rem
+
+.table-actions-top
+  display: flex
+  justify-content: flex-start
+  margin-bottom: -0.5rem
+
+.back-btn
+  padding: 0.65rem 1.25rem
+  background: var(--card-light-bg)
+  border: 1px solid var(--border-color)
+  border-radius: 8px
+  font-size: 0.9rem
+  font-weight: 600
+  color: var(--text-main)
+  cursor: pointer
+  transition: all 0.2s
+  font-family: inherit
+
+  &:hover
+    background: var(--hover-bg)
+    border-color: var(--text-muted)
+
 
 // ---- KPI strip ----
 .kpi-strip

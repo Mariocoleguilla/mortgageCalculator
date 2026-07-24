@@ -68,7 +68,8 @@
       <span class="badge-value highlight-red">{{ currentInterestBefore | currencyConvert }}</span>
     </div>
     }
-    <button class="clear-installment-btn" id="clear-installment" (click)="clearInstallment()" title="Limpiar cuota seleccionada">
+    <button class="clear-installment-btn" id="clear-installment" (click)="clearInstallment()"
+      title="Limpiar cuota seleccionada">
       ✕ Limpiar cuota
     </button>
   </div>
@@ -140,7 +141,7 @@
   }
 
   <div class="actions">
-    <button class="back-btn" id="back-to-features" (click)="goBack()">← Volver a las herramientas</button>
+    <app-back-button></app-back-button>
   </div>
 
 </div>

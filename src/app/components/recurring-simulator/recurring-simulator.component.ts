@@ -6,13 +6,14 @@ import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
+import { BackButtonComponent } from 'src/app/components/back-button/back-button.component';
 
 type InputMode = 'installment' | 'manual';
 
 @Component({
   selector: 'app-recurring-simulator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe],
+  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe, BackButtonComponent],
   templateUrl: './recurring-simulator.component.html',
   styleUrls: ['./recurring-simulator.component.sass']
 })
@@ -203,10 +204,6 @@ export class RecurringSimulatorComponent implements OnInit, OnDestroy {
 
   formatAmount(value: number): string {
     return value?.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? '';
-  }
-
-  goBack(): void {
-    this.router.navigate(['/features']);
   }
 
   // Currency helpers

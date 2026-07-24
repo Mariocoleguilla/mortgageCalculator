@@ -6,13 +6,14 @@ import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
+import { BackButtonComponent } from 'src/app/components/back-button/back-button.component';
 
 type InputMode = 'installment' | 'manual';
 
 @Component({
   selector: 'app-amortization-simulator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe],
+  imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe, BackButtonComponent],
   templateUrl: './amortization-simulator.component.html',
   styleUrls: ['./amortization-simulator.component.sass']
 })
@@ -261,10 +262,6 @@ export class AmortizationSimulatorComponent implements OnInit, OnDestroy {
     this.extraPayment = 0;
     this.formattedExtraPayment = '';
     this.clearResults();
-  }
-
-  goBack(): void {
-    this.router.navigate(['/features']);
   }
 
   get currencySymbol(): string {

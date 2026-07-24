@@ -6,11 +6,12 @@ import { Subscription } from 'rxjs';
 import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
+import { BackButtonComponent } from 'src/app/components/back-button/back-button.component';
 
 @Component({
   selector: 'app-savings-calculator',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, CurrencyConvertPipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, CurrencyConvertPipe, BackButtonComponent],
   templateUrl: './savings-calculator.component.html',
   styleUrls: ['./savings-calculator.component.sass']
 })
@@ -229,10 +230,6 @@ export class SavingsCalculatorComponent implements OnInit, OnDestroy {
 
   formatAmount(value: number): string {
     return value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  goBack(): void {
-    this.router.navigate(['/features']);
   }
 
   get currencySymbol(): string {
