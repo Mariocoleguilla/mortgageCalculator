@@ -147,6 +147,10 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   async login(): Promise<void> {
     try {
       await this.authService.loginWithGoogle();
+      // On success, redirect to features if we have mortgage data loaded
+      if (this.mortgageService.hasMortgageData) {
+        this.router.navigate(['/features']);
+      }
     } catch (err) {
       console.error('Login error from mortgage form:', err);
     }
