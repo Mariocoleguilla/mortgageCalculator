@@ -23,6 +23,7 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   private warningSubscription!: Subscription;
   private currencySub!: Subscription;
   private authSub!: Subscription;
+  private hasMortgageDataSub!: Subscription;
   private previousRate = 1;
 
   constructor(
@@ -51,6 +52,21 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
 
     this.authSub = this.authService.user$.subscribe(u => {
       this.user = u;
+      // When a logged-in user already has mortgage data (loaded from local cache
+      // or just synced from Firestore), skip this page and go straight to features.
+      if (u && this.mortgageService.hasMortgageData) {
+        this.router.navigate(['/features']);
+        return;
+      }
+    });
+
+    // Also react when Firestore finishes loading the data asynchronously
+    // (the user object may already be set but data arrives moments later)
+    this.hasMortgageDataSub = this.mortgageService.hasMortgageData$.subscribe(hasMortgage => {
+      if (hasMortgage && this.authService.currentUser) {
+        this.router.navigate(['/features']);
+        return;
+      }
     });
 
     // Load existing data from session if available
@@ -142,6 +158,7 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
     this.warningSubscription?.unsubscribe();
     this.currencySub?.unsubscribe();
     this.authSub?.unsubscribe();
+    this.hasMortgageDataSub?.unsubscribe();
   }
 
   async login(): Promise<void> {
