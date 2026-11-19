@@ -1,4 +1,3 @@
-@use "sass:color"
 
 $primary-color: #4caf50
 $error-color: #ef4444
@@ -9,14 +8,14 @@ $success-color: #10b981
 .savings-container
   max-width: 1050px
   margin: 0 auto
-  padding: 2.5rem 1.5rem
+  padding: 1.5rem 0.5rem
 
 .savings-header
   text-align: center
   margin-bottom: 2.5rem
 
   h2
-    font-size: 2rem
+    font-size: clamp(1.4rem, 4vw, 2rem)
     font-weight: 700
     color: var(--text-main)
     margin: 0 0 0.5rem
@@ -44,7 +43,18 @@ $success-color: #10b981
   box-sizing: border-box
 
 .form-group-section
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr))
+  column-gap: 1rem
+  align-items: end
   margin-bottom: 2rem
+
+  .section-title, .section-subtitle-hint
+    grid-column: 1 / -1
+
+  // A lone field in the last row takes the full width
+  .form-field:last-of-type:nth-of-type(odd)
+    grid-column: 1 / -1
   border-bottom: 1px solid var(--border-color)
   padding-bottom: 1.5rem
 
@@ -70,9 +80,6 @@ $success-color: #10b981
 
 .form-field
   margin-bottom: 1.25rem
-
-  &:last-child
-    margin-bottom: 0
 
   label
     display: block
@@ -198,6 +205,7 @@ $success-color: #10b981
     .balance-value
       font-size: 1.2rem
       font-weight: 800
+      white-space: nowrap
 
 .savings-progress-section
   margin-bottom: 2rem
@@ -284,6 +292,11 @@ $success-color: #10b981
       color: var(--text-muted)
       font-weight: normal
 
+  .val-plus, .val-minus
+    white-space: nowrap
+    flex-shrink: 0
+    padding-left: 0.75rem
+
   .val-plus
     color: $primary-color
     font-weight: 600
@@ -302,6 +315,8 @@ $success-color: #10b981
   color: var(--text-main)
 
   .total-val
+    white-space: nowrap
+    padding-left: 0.75rem
     font-size: 1.35rem
     font-weight: 800
     color: $primary-color
@@ -359,8 +374,6 @@ $success-color: #10b981
       color: #7f1d1d
     p
       color: #991b1b
-      strong
-        color: #7f1d1d
 
     html.dark &
       background-color: #2d1618
@@ -369,8 +382,6 @@ $success-color: #10b981
         color: #fee2e2
       p
         color: #fecaca
-        strong
-          color: #fee2e2
 
   &.warning
     background-color: #fffbeb
@@ -379,8 +390,6 @@ $success-color: #10b981
       color: #78350f
     p
       color: #92400e
-      strong
-        color: #78350f
 
     html.dark &
       background-color: #2c1d05
@@ -389,8 +398,6 @@ $success-color: #10b981
         color: #fef08a
       p
         color: #fef3c7
-        strong
-          color: #fef08a
 
   &.info
     background-color: #eff6ff
@@ -399,8 +406,6 @@ $success-color: #10b981
       color: #1e3a8a
     p
       color: #1e40af
-      strong
-        color: #1e3a8a
 
     html.dark &
       background-color: #0c1c38
@@ -409,8 +414,6 @@ $success-color: #10b981
         color: #eff6ff
       p
         color: #dbeafe
-        strong
-          color: #eff6ff
 
   &.success-light, &.success
     background-color: #f0fdf4
@@ -419,8 +422,6 @@ $success-color: #10b981
       color: #14532d
     p
       color: #166534
-      strong
-        color: #14532d
 
     html.dark &
       background-color: #062817
@@ -429,39 +430,97 @@ $success-color: #10b981
         color: #ecfdf5
       p
         color: #d1fae5
-        strong
-          color: #ecfdf5
 
 .actions
   margin-top: 2rem
   display: flex
   justify-content: flex-start
 
-.back-btn
-  padding: 0.65rem 1.25rem
-  background: var(--card-light-bg)
-  border: 1px solid var(--border-color)
-  border-radius: 8px
-  font-size: 0.9rem
-  font-weight: 600
-  color: var(--text-main)
-  cursor: pointer
-  transition: all 0.2s
-
-  &:hover
-    background: var(--hover-bg)
-    border-color: var(--text-muted)
 
 @media (max-width: 600px)
   .savings-container
-    padding: 1.25rem 1rem
-    
-  .savings-header h2
-    font-size: 1.6rem
+    padding: 0.5rem 0
+
+  .savings-header
+    margin-bottom: 1.5rem
+
+  // Two compact columns for the short expense fields on phones
+  .form-group-section
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr))
+    column-gap: 0.75rem
+
+  .form-field label
+    font-size: 0.8rem
     
   .form-panel-card, .results-panel-card
     padding: 1.25rem
     
   .salary-vs-expenses
+    gap: 0.6rem
+
+    .balance-card
+      padding: 0.9rem 0.8rem
+
+    .balance-label
+      font-size: 0.68rem
+
+    .balance-value
+      font-size: 1.05rem
+
+  .breakdown-total
+    font-size: 1rem
+    .total-val
+      font-size: 1.2rem
+
+  .actions
+    margin-top: 1.25rem
+
+@media (max-width: 380px)
+  .salary-vs-expenses
     grid-template-columns: 1fr
+
+// ---- Sticky savings bar (only when results are stacked below the form) ----
+.mobile-savings-bar
+  display: none
+
+@media (max-width: 850px)
+  .mobile-savings-bar
+    position: sticky
+    bottom: 0
+    z-index: 50
+    display: flex
+    align-items: center
+    justify-content: space-between
     gap: 0.75rem
+    margin: 1rem -0.25rem 0
+    padding: 0.75rem 1rem
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom))
+    background: var(--card-bg)
+    border: 1px solid var(--border-color)
+    border-radius: var(--radius-md) var(--radius-md) 0 0
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08)
+    font-size: 0.85rem
+    color: var(--text-muted)
+    font-weight: 600
+
+    strong
+      font-size: 1.1rem
+      color: $primary-color
+      white-space: nowrap
+
+    &.negative strong
+      color: $error-color
+
+    button
+      padding: 0.45rem 0.85rem
+      background: var(--hover-bg)
+      border: 1px solid var(--border-color)
+      border-radius: var(--radius-sm)
+      color: var(--text-main)
+      font-size: 0.8rem
+      font-weight: 600
+      cursor: pointer
+      white-space: nowrap
+
+  .results-panel-card
+    scroll-margin-top: 140px

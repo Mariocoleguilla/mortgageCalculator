@@ -6,11 +6,12 @@ import { MortgageService } from 'src/app/services/mortgage.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
+import { CurrencyConvertPipe } from 'src/app/pipes/currency-convert.pipe';
 
 @Component({
     selector: 'app-form-mortgage',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, CurrencyConvertPipe],
     templateUrl: './form-mortgage.component.html',
     styleUrls: ['./form-mortgage.component.sass']
 })
@@ -25,6 +26,13 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
   private authSub!: Subscription;
   private hasMortgageDataSub!: Subscription;
   private previousRate = 1;
+
+  readonly periodOptions = [
+    { value: 12, label: 'Mensual' },
+    { value: 4, label: 'Trimestral' },
+    { value: 2, label: 'Semestral' },
+    { value: 1, label: 'Anual' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -171,6 +179,30 @@ export class FormMortgageComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Login error from mortgage form:', err);
     }
+  }
+
+  /** Payment per period in base currency (EUR), or null while the form is incomplete. */
+  get previewPayment(): number | null {
+    const { amount, interestRate, years, periodsPerYear } = this.mortgageForm.value;
+    if (!amount || amount < 1000 || interestRate === null || interestRate < 0 || !years || years < 1 || !periodsPerYear) {
+      return null;
+    }
+    const principal = this.currencyService.convertToBase(amount);
+    const n = years * periodsPerYear;
+    const r = interestRate / 100 / periodsPerYear;
+    return r === 0 ? principal / n : (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  get previewTotal(): number | null {
+    const p = this.previewPayment;
+    if (p === null) return null;
+    const { years, periodsPerYear } = this.mortgageForm.value;
+    return p * years * periodsPerYear;
+  }
+
+  get previewInterest(): number | null {
+    const total = this.previewTotal;
+    return total === null ? null : total - this.currencyService.convertToBase(this.mortgageForm.value.amount);
   }
 
   get currencySymbol(): string {

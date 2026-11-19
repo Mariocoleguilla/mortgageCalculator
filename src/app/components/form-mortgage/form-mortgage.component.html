@@ -14,7 +14,7 @@
         </div>
       </div>
       <button type="button" class="banner-login-btn" (click)="login()">
-        <svg class="google-logo" viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
+        <svg class="google-logo" viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
@@ -29,16 +29,16 @@
   <div class="warning-banner" role="alert">
     <span class="warning-icon">⚠️</span>
     <span>Para acceder a esta función, primero debes introducir los datos de tu hipoteca.</span>
-    <button class="warning-close" (click)="showWarning = false">✕</button>
+    <button type="button" class="warning-close" aria-label="Cerrar aviso" (click)="showWarning = false">✕</button>
   </div>
   }
 
-  <form [formGroup]="mortgageForm" class="mortgage-form">
+  <form [formGroup]="mortgageForm" class="mortgage-form" (ngSubmit)="mortgageForm.valid && submitForm()">
     <!-- Field: Amount -->
     <div class="form-field">
       <label for="amount">Importe a financiar ({{ currencyCode }})</label>
       <div class="input-amount-wrapper">
-        <input id="amount" type="text" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
+        <input id="amount" type="text" inputmode="numeric" autocomplete="off" [value]="formattedAmount" (input)="onAmountInput($event)" (blur)="onAmountBlur()"
           placeholder="Ej: 140.000" />
         <span class="input-currency-badge">{{ currencySymbol }}</span>
       </div>
@@ -54,10 +54,14 @@
       }
     </div>
 
+    <div class="form-row">
     <!-- Field: Interest Rate -->
     <div class="form-field">
-      <label for="interestRate">Tipo de interés (% TIN)</label>
-      <input id="interestRate" type="number" formControlName="interestRate" placeholder="Ej: 2,50" step="0.01" />
+      <label for="interestRate">Tipo de interés (TIN)</label>
+      <div class="input-amount-wrapper">
+        <input id="interestRate" type="number" inputmode="decimal" formControlName="interestRate" placeholder="Ej: 2,50" step="0.01" />
+        <span class="input-currency-badge">%</span>
+      </div>
       @if (mortgageForm.get('interestRate')?.invalid && mortgageForm.get('interestRate')?.touched) {
       <div class="field-error">
         @if (mortgageForm.get('interestRate')?.errors?.['required']) {
@@ -75,8 +79,11 @@
 
     <!-- Field: Years -->
     <div class="form-field">
-      <label for="years">Plazo (años)</label>
-      <input id="years" type="number" formControlName="years" placeholder="Ej: 30" />
+      <label for="years">Plazo</label>
+      <div class="input-amount-wrapper">
+        <input id="years" type="number" inputmode="numeric" formControlName="years" placeholder="Ej: 30" />
+        <span class="input-currency-badge">años</span>
+      </div>
       @if (mortgageForm.get('years')?.invalid && mortgageForm.get('years')?.touched) {
       <div class="field-error">
         @if (mortgageForm.get('years')?.errors?.['required']) {
@@ -89,10 +96,18 @@
       }
     </div>
 
+    </div>
+
     <!-- Field: Periods per year -->
     <div class="form-field">
-      <label for="periodsPerYear">Periodos por año</label>
-      <input id="periodsPerYear" type="number" formControlName="periodsPerYear" placeholder="Ej: 12" value="12" />
+      <label for="periodsPerYear">Frecuencia de pago</label>
+      <div class="segmented-control" role="radiogroup" aria-label="Frecuencia de pago">
+        @for (opt of periodOptions; track opt.value) {
+          <button type="button" role="radio" [attr.aria-checked]="mortgageForm.get('periodsPerYear')?.value === opt.value"
+            [class.active]="mortgageForm.get('periodsPerYear')?.value === opt.value"
+            (click)="mortgageForm.patchValue({ periodsPerYear: opt.value })">{{ opt.label }}</button>
+        }
+      </div>
       @if (mortgageForm.get('periodsPerYear')?.invalid && mortgageForm.get('periodsPerYear')?.touched) {
       <div class="field-error">
         @if (mortgageForm.get('periodsPerYear')?.errors?.['required']) {
@@ -105,8 +120,22 @@
       }
     </div>
 
+    <!-- Live payment preview -->
+    @if (previewPayment !== null) {
+      <div class="payment-preview" aria-live="polite">
+        <div class="preview-main">
+          <span class="preview-label">Cuota estimada</span>
+          <span class="preview-value">{{ previewPayment | currencyConvert }}</span>
+        </div>
+        <div class="preview-secondary">
+          <span>Intereses totales <strong>{{ previewInterest | currencyConvert }}</strong></span>
+          <span>Total a pagar <strong>{{ previewTotal | currencyConvert }}</strong></span>
+        </div>
+      </div>
+    }
+
     <!-- Submit Button -->
-    <button id="submit-mortgage-form" class="submit-btn" [disabled]="mortgageForm.invalid" (click)="submitForm()">
+    <button type="submit" id="submit-mortgage-form" class="submit-btn" [disabled]="mortgageForm.invalid" >
       Ver herramientas →
     </button>
   </form>

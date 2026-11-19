@@ -195,6 +195,10 @@ export class SavingsCalculatorComponent implements OnInit, OnDestroy {
     this.mortgageService.setSavingsData(eurData);
   }
 
+  scrollToResults(): void {
+    document.getElementById('savings-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   toggleViewMode(isAnnual: boolean): void {
     this.isAnnualView = isAnnual;
   }

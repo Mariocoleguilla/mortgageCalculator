@@ -3,45 +3,121 @@
     <app-back-button></app-back-button>
   </div>
 
-  <!-- KPI summary strip -->
-  <div class="kpi-strip">
+  <div class="page-header">
+    <h2>Tabla de Amortización</h2>
+    <p class="subtitle">Desglose de capital e intereses de cada cuota</p>
+  </div>
+
+  <!-- KPI summary -->
+  <div class="kpi-grid">
     <div class="kpi-card">
-      <span class="kpi-label">Cuota mensual</span>
-      <span class="kpi-value">{{ this.monthlyFee | currencyConvert }}</span>
+      <span class="kpi-label">Cuota {{ periodLabel }}</span>
+      <span class="kpi-value">{{ monthlyFee | currencyConvert }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Nº de cuotas</span>
+      <span class="kpi-value">{{ tableData.length }}</span>
     </div>
     <div class="kpi-card highlight">
-      <span class="kpi-label">Total intereses en {{ this.formData.years }} años</span>
-      <span class="kpi-value">{{ this.totalFees | currencyConvert }}</span>
+      <span class="kpi-label">Total intereses</span>
+      <span class="kpi-value">{{ totalFees | currencyConvert }}</span>
     </div>
-    <div class="kpi-hint">
-      <span class="kpi-hint-icon">💡</span>
-      Haz clic en cualquier fila para simular una amortización anticipada desde esa cuota
+    <div class="kpi-card">
+      <span class="kpi-label">Total a pagar</span>
+      <span class="kpi-value">{{ totalPaid | currencyConvert }}</span>
     </div>
   </div>
 
+  <!-- Capital vs interest split -->
+  <div class="split-card" aria-label="Proporción de capital e intereses sobre el total pagado">
+    <div class="split-bar">
+      <span class="split-capital" [style.width.%]="capitalShare"></span>
+      <span class="split-interest" [style.width.%]="100 - capitalShare"></span>
+    </div>
+    <div class="split-legend">
+      <span><i class="dot capital"></i>Capital {{ capitalShare | number:'1.0-1' }}%</span>
+      <span><i class="dot interest"></i>Intereses {{ 100 - capitalShare | number:'1.0-1' }}%</span>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="table-toolbar">
+    <div class="segmented" role="tablist" aria-label="Agrupar tabla">
+      <button type="button" role="tab" [attr.aria-selected]="view === 'period'" [class.active]="view === 'period'" (click)="setView('period')">Por cuota</button>
+      <button type="button" role="tab" [attr.aria-selected]="view === 'year'" [class.active]="view === 'year'" (click)="setView('year')">Por año</button>
+    </div>
+    <button type="button" class="export-btn" (click)="exportCsv()">
+      <span aria-hidden="true">⬇</span> Exportar CSV
+    </button>
+  </div>
+
+  <div class="kpi-hint">
+    <span class="kpi-hint-icon" aria-hidden="true">💡</span>
+    @if (view === 'period') {
+      <span>Toca cualquier fila para simular una amortización anticipada desde esa cuota</span>
+    } @else {
+      <span>Toca un año para ver el detalle de sus cuotas</span>
+    }
+  </div>
+
   <!-- Amortization table -->
-  @if (this.tableData.length > 0) {
+  @if (view === 'period' && tableData.length > 0) {
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>Nº Cuota</th>
-          <th>Cuota</th>
-          <th>Interés</th>
-          <th>Capital</th>
-          <th>Amortización</th>
-          <th>Capital Restante</th>
+          <th scope="col">Nº</th>
+          <th scope="col" class="col-optional">Cuota</th>
+          <th scope="col">Interés</th>
+          <th scope="col">Capital</th>
+          <th scope="col" class="col-optional">Amortizado</th>
+          <th scope="col">Pendiente</th>
         </tr>
       </thead>
       <tbody>
-        @for (row of this.tableData; track row) {
-        <tr (click)="onRowClick(row)" class="table-row">
-          <td>{{ row.period }}</td>
-          <td>{{ row.monthlyFee | currencyConvert }}</td>
-          <td>{{ row.fees | currencyConvert }}</td>
+        @for (row of tableData; track row.period) {
+        <tr (click)="onRowClick(row)" (keydown.enter)="onRowClick(row)" tabindex="0" class="table-row"
+          [class.selected]="row.period === selectedPeriod"
+          [class.year-start]="row.period % periodsPerYear === 1 || periodsPerYear === 1"
+          [attr.id]="'period-' + row.period">
+          <td class="col-period">{{ row.period }}</td>
+          <td class="col-optional">{{ row.monthlyFee | currencyConvert }}</td>
+          <td class="col-interest">{{ row.fees | currencyConvert }}</td>
           <td>{{ row.capital | currencyConvert }}</td>
-          <td>{{ row.amortization | currencyConvert }}</td>
-          <td>{{ row.remainingCapital | currencyConvert }}</td>
+          <td class="col-optional">{{ row.amortization | currencyConvert }}</td>
+          <td class="col-remaining">{{ row.remainingCapital | currencyConvert }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  @if (view === 'year') {
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Año</th>
+          <th scope="col">Interés</th>
+          <th scope="col">Capital</th>
+          <th scope="col" class="col-optional">% Amortizado</th>
+          <th scope="col">Pendiente</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (y of yearlyData; track y.year) {
+        <tr class="table-row" tabindex="0" (click)="goToYear(y.year)" (keydown.enter)="goToYear(y.year)">
+          <td class="col-period">{{ y.year }}</td>
+          <td class="col-interest">{{ y.interest | currencyConvert }}</td>
+          <td>{{ y.capital | currencyConvert }}</td>
+          <td class="col-optional">
+            <span class="progress-cell">
+              <span class="progress-track"><span class="progress-fill" [style.width.%]="y.paidPercent"></span></span>
+              {{ y.paidPercent | number:'1.0-0' }}%
+            </span>
+          </td>
+          <td class="col-remaining">{{ y.remainingCapital | currencyConvert }}</td>
         </tr>
         }
       </tbody>

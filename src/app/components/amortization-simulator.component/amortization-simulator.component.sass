@@ -8,7 +8,7 @@ $border: var(--border-color)
 .simulator-container
   max-width: 760px
   margin: 0 auto
-  padding: 2rem 1.5rem
+  padding: 1.5rem 0.5rem
   display: flex
   flex-direction: column
   gap: 1.5rem
@@ -18,7 +18,7 @@ $border: var(--border-color)
   text-align: center
 
   h2
-    font-size: 1.75rem
+    font-size: clamp(1.4rem, 4vw, 1.75rem)
     font-weight: 700
     color: var(--text-main)
     margin: 0 0 0.4rem
@@ -30,9 +30,10 @@ $border: var(--border-color)
 
 // ---- Mortgage summary ----
 .mortgage-summary-card
-  background: var(--card-light-bg)
+  background: var(--card-bg)
   border: 1px solid $border
-  border-radius: 14px
+  border-radius: var(--radius-md)
+  box-shadow: var(--shadow-sm)
   padding: 1.25rem 1.5rem
 
 .summary-row
@@ -56,6 +57,7 @@ $border: var(--border-color)
 .summary-value
   font-size: 1rem
   font-weight: 700
+  white-space: nowrap
   color: var(--text-main)
 
   &.highlight-red
@@ -101,8 +103,9 @@ $border: var(--border-color)
 
   &.active
     border-color: $primary
-    background: var(--hover-bg)
+    background: color-mix(in srgb, #{$primary} 10%, var(--card-bg))
     color: $primary
+    box-shadow: 0 0 0 3px color-mix(in srgb, #{$primary} 15%, transparent)
 
 // ---- Installment info ----
 .installment-info
@@ -138,6 +141,10 @@ $border: var(--border-color)
   padding: 0.75rem 1.1rem
   min-width: 130px
 
+  &.standalone
+    align-self: flex-start
+    margin-top: -0.5rem
+
 .badge-label
   font-size: 0.7rem
   text-transform: uppercase
@@ -148,6 +155,7 @@ $border: var(--border-color)
 .badge-value
   font-size: 1.05rem
   font-weight: 700
+  white-space: nowrap
   color: var(--text-main)
 
   &.highlight-blue
@@ -213,9 +221,14 @@ $border: var(--border-color)
 
   &:focus-within
     border-color: $primary
+    box-shadow: var(--focus-ring)
+
+  input:focus-visible
+    box-shadow: none
 
   input
     flex: 1
+    min-width: 0
     padding: 0.75rem 1rem
     border: none
     outline: none
@@ -235,6 +248,7 @@ $border: var(--border-color)
     border-left: 1px solid $border
     display: flex
     align-items: center
+    white-space: nowrap
 
 // ---- Results ----
 .results-section
@@ -265,10 +279,17 @@ $border: var(--border-color)
 
   &.saving
     border-color: #bbf7d0
-    background: var(--hover-bg)
-    
+    background: #f0fdf4
+
     html.dark &
-      border-color: var(--border-color)
+      border-color: #166534
+      background: #0f2a1a
+
+    .result-value
+      color: #16a34a
+
+      html.dark &
+        color: #4ade80
 
   &.time
     border-color: var(--blue-border)
@@ -294,7 +315,7 @@ $border: var(--border-color)
   font-weight: 500
 
 .result-value
-  font-size: 1.1rem
+  font-size: 1.25rem
   font-weight: 700
   color: var(--text-main)
   display: flex
@@ -310,38 +331,9 @@ $border: var(--border-color)
 .actions
   margin-top: 0.25rem
 
-.back-btn
-  background: none
-  border: 1.5px solid $border
-  border-radius: 8px
-  padding: 0.6rem 1.2rem
-  font-size: 0.9rem
-  color: var(--text-main)
-  cursor: pointer
-  font-weight: 600
-  transition: all 0.2s
-
-  &:hover
-    background: var(--hover-bg)
-    border-color: var(--text-muted)
-
-.hint-link-btn
-  background: none
-  border: none
-  padding: 0
-  font: inherit
-  color: $blue
-  font-weight: 600
-  cursor: pointer
-  text-decoration: underline
-  text-underline-offset: 2px
-
-  &:hover
-    opacity: 0.75
-
 @media (max-width: 680px)
   .simulator-container
-    padding: 1.25rem 1rem
+    padding: 0.5rem 0
     gap: 1.25rem
 
   .sim-header h2
@@ -382,3 +374,22 @@ $border: var(--border-color)
   .results-grid
     grid-template-columns: 1fr
     gap: 0.75rem
+
+  // Compact horizontal result cards on phones: icon | label + value
+  .result-card
+    display: grid
+    grid-template-columns: auto 1fr
+    grid-template-rows: auto auto
+    column-gap: 0.9rem
+    align-items: center
+    padding: 0.9rem 1rem
+
+    .result-icon
+      grid-row: span 2
+      font-size: 1.6rem
+
+  .result-value
+    flex-direction: row
+    flex-wrap: wrap
+    align-items: baseline
+    gap: 0.4rem
