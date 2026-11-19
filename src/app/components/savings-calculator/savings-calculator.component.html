@@ -105,7 +105,7 @@
     </div>
 
     <!-- RIGHT PANEL: RESULTS -->
-    <div class="results-panel-card">
+    <div class="results-panel-card" id="savings-results">
       <div class="results-panel-header">
         <h3>Resumen de Ahorro</h3>
 
@@ -241,6 +241,11 @@
   }
 </div>
 </div>
+</div>
+
+<div class="mobile-savings-bar" [class.negative]="displaySavings < 0" aria-live="polite">
+  <span>Ahorro {{ isAnnualView ? 'anual' : 'mensual' }}<br><strong>{{ displaySavings | currencyConvert }}</strong></span>
+  <button type="button" (click)="scrollToResults()">Ver resumen ↓</button>
 </div>
 
 <div class="actions">

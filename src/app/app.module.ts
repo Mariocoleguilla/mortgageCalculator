@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +21,7 @@ import { FeaturesComponent } from './components/features/features.component';
 import { SavingsCalculatorComponent } from './components/savings-calculator/savings-calculator.component';
 import { CurrencyConvertPipe } from './pipes/currency-convert.pipe';
 
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
@@ -44,7 +47,7 @@ import { CurrencyConvertPipe } from './pipes/currency-convert.pipe';
     SavingsCalculatorComponent,
     CurrencyConvertPipe
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

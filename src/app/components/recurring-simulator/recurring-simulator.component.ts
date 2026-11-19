@@ -15,7 +15,7 @@ type InputMode = 'installment' | 'manual';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, CurrencyConvertPipe, BackButtonComponent],
   templateUrl: './recurring-simulator.component.html',
-  styleUrls: ['./recurring-simulator.component.sass']
+  styleUrls: ['../amortization-simulator.component/amortization-simulator.component.sass', './recurring-simulator.component.sass']
 })
 export class RecurringSimulatorComponent implements OnInit, OnDestroy {
 

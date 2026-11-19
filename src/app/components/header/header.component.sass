@@ -1,17 +1,149 @@
+// Grid layout:
+//  desktop  → [title] [summaries .........] [actions]
+//  ≤900px   → [title ............] [actions]
+//             [summaries (horizontal scroll)  ]
+
 .header-content
+  display: grid
+  grid-template-columns: auto minmax(0, 1fr) auto
+  grid-template-areas: "title summaries actions"
+  align-items: center
+  gap: 0.5rem 1.25rem
+  width: 100%
+  min-height: 40px
+
+.header-title
+  grid-area: title
+  margin: 0
+  font-size: 1.2rem
+  font-weight: 700
+  line-height: 1.2
+  white-space: nowrap
+
+  a
+    display: inline-flex
+    align-items: center
+    gap: 0.5rem
+    color: var(--text-main)
+    cursor: pointer
+    text-decoration: none
+    border-radius: 6px
+    transition: color 0.2s ease
+
+    &:hover
+      color: var(--primary-color)
+
+  .brand-icon
+    font-size: 1.3rem
+
+  .brand-accent
+    color: var(--primary-color)
+
+.header-summaries
+  grid-area: summaries
   display: flex
   align-items: center
-  gap: 1.5rem
-  width: 100%
-  flex-wrap: wrap
+  gap: 0.6rem
+  min-width: 0
+  overflow-x: auto
+  scrollbar-width: none
+  -webkit-overflow-scrolling: touch
+  scroll-snap-type: x proximity
+  // Small padding so focus rings / borders are not clipped by the scroll container
+  padding: 2px
+
+  &::-webkit-scrollbar
+    display: none
+
+  &:empty
+    display: none
 
 .header-actions
-  margin-left: auto
+  grid-area: actions
   display: flex
   align-items: center
-  gap: 0.75rem
-  flex-shrink: 0
+  gap: 0.5rem
+  justify-self: end
 
+// ---- Summary chips ----
+.mortgage-summary, .installment-summary
+  display: flex
+  align-items: center
+  gap: 0.6rem
+  flex-shrink: 0
+  border-radius: 999px
+  padding: 0.3rem 0.5rem 0.3rem 1rem
+  white-space: nowrap
+  transition: background-color 0.2s ease, border-color 0.2s ease
+
+.mortgage-summary
+  background: var(--hover-bg)
+  border: 1px solid var(--border-color)
+  cursor: pointer
+
+  &:hover
+    background: var(--border-color)
+    border-color: var(--text-muted)
+
+.installment-summary
+  background: var(--blue-bg)
+  border: 1px solid var(--blue-border)
+  padding-left: 0.75rem
+
+  .installment-icon
+    font-size: 0.85rem
+
+.summary-item
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+
+.summary-label
+  font-size: 0.62rem
+  color: var(--text-muted)
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.05em
+  line-height: 1.1
+
+.summary-value
+  font-size: 0.85rem
+  font-weight: 700
+  color: var(--text-main)
+  line-height: 1.25
+
+  &.highlight-blue
+    color: var(--blue-border)
+
+.summary-divider
+  width: 1px
+  align-self: stretch
+  margin: 0.15rem 0
+  background: var(--border-color)
+
+.clear-mortgage-btn
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  width: 26px
+  height: 26px
+  flex-shrink: 0
+  padding: 0
+  margin-left: 0.1rem
+  background: transparent
+  border: none
+  border-radius: 50%
+  color: var(--text-muted)
+  font-size: 1.1rem
+  line-height: 1
+  cursor: pointer
+  transition: color 0.15s ease, background-color 0.15s ease
+
+  &:hover
+    color: #ef4444
+    background: rgba(239, 68, 68, 0.12)
+
+// ---- Actions ----
 .currency-selector-wrapper
   position: relative
   display: flex
@@ -20,34 +152,35 @@
 
 .currency-select
   appearance: none
-  background: var(--hover-bg)
+  height: 38px
+  min-width: 92px
+  padding: 0 1.8rem 0 0.75rem
+  background-color: var(--hover-bg)
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%)
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%
+  background-size: 5px 5px
+  background-repeat: no-repeat
   border: 1px solid var(--border-color)
-  border-radius: 8px
-  padding: 0.35rem 0.7rem
+  border-radius: var(--radius-sm)
   font-size: 0.85rem
   font-weight: 600
   color: var(--text-main)
   cursor: pointer
-  transition: all 0.2s ease
   outline: none
-  min-width: 90px
+  transition: border-color 0.2s ease, background-color 0.2s ease
 
   &:hover
     border-color: var(--text-muted)
-    background: var(--border-color)
 
   &:focus
-    border-color: #4caf50
-
-  html.dark &
-    background: var(--hover-bg)
-    color: var(--text-main)
+    border-color: var(--primary-color)
 
 .currency-spinner
   display: inline-flex
   align-items: center
   justify-content: center
-  width: 90px
+  width: 92px
+  height: 38px
   font-size: 1.2rem
   color: var(--text-muted)
   animation: spin 1s linear infinite
@@ -63,157 +196,67 @@
   color: #f59e0b
   cursor: help
 
-h1
-  margin: 0
-  font-size: 1.25rem
-  font-weight: 700
-  color: var(--text-main)
-  cursor: pointer
-  white-space: nowrap
-  flex-shrink: 0
-
-  &:hover
-    color: #4caf50
-
-.mortgage-summary
-  display: flex
-  align-items: center
-  gap: 0.5rem
-  background: var(--hover-bg)
-  border: 1px solid var(--border-color)
-  border-radius: 999px
-  padding: 0.35rem 1rem
-  cursor: pointer
-  transition: all 0.2s ease-in-out
-  flex-wrap: wrap
-
-  &:hover
-    background: var(--border-color)
-    border-color: var(--text-muted)
-
-.installment-summary
-  display: flex
-  align-items: center
-  gap: 0.5rem
-  background: var(--blue-bg)
-  border: 1px solid var(--blue-border)
-  border-radius: 999px
-  padding: 0.35rem 1rem
-  flex-wrap: wrap
-
-  .installment-icon
-    font-size: 0.85rem
-    flex-shrink: 0
-
-.summary-item
-  display: flex
-  flex-direction: column
-  align-items: center
-  gap: 0
-
-.summary-label
-  font-size: 0.65rem
-  color: var(--text-muted)
-  font-weight: 500
-  text-transform: uppercase
-  letter-spacing: 0.04em
-  line-height: 1
-
-.summary-value
-  font-size: 0.85rem
-  font-weight: 700
-  color: var(--text-main)
-  line-height: 1.2
-
-  &.highlight-blue
-    color: var(--blue-border)
-
-.summary-divider
-  color: var(--border-color)
-  font-size: 1rem
-  margin: 0 0.1rem
-
-.clear-mortgage-btn
-  background: none
-  border: none
-  border-left: 1px solid var(--border-color)
-  padding: 0 0 0 0.5rem
-  margin-left: 0.25rem
-  color: #94a3b8
-  font-size: 1.15rem
-  line-height: 1
-  cursor: pointer
-  display: inline-flex
-  align-items: center
-  font-weight: 700
-  transition: color 0.15s ease
-
-  &:hover
-    color: #ef4444
-
 .theme-toggle-btn
-  background-color: var(--hover-bg)
-  border: 1px solid var(--border-color)
-  color: var(--text-main)
-  border-radius: 50%
   width: 38px
   height: 38px
   display: flex
   align-items: center
   justify-content: center
-  font-size: 1.15rem
-  cursor: pointer
-  transition: all 0.2s ease-in-out
-  box-shadow: var(--shadow-sm)
+  flex-shrink: 0
   padding: 0
+  background-color: var(--hover-bg)
+  border: 1px solid var(--border-color)
+  border-radius: 50%
+  font-size: 1.05rem
+  cursor: pointer
+  transition: background-color 0.2s ease, transform 0.2s ease
 
   &:hover
     background-color: var(--border-color)
-    transform: scale(1.08)
+    transform: rotate(15deg)
 
   &:active
-    transform: scale(0.95)
+    transform: scale(0.92)
 
+// ---- Responsive ----
 @media (max-width: 768px)
   .header-content
-    gap: 0.75rem
-    
-  h1
-    font-size: 1.15rem
+    grid-template-columns: minmax(0, 1fr) auto
+    grid-template-areas: "title actions" "summaries summaries"
+
+  .header-summaries
+    mask-image: linear-gradient(to right, #000 92%, transparent)
 
   .mortgage-summary, .installment-summary
-    padding: 0.3rem 0.75rem
-    gap: 0.4rem
-    border-radius: 12px
-    
-  .summary-item
-    flex-direction: row
-    gap: 0.25rem
-    align-items: center
-    
-  .summary-label
-    font-size: 0.65rem
-    
-  .summary-value
-    font-size: 0.75rem
-    
-  .summary-divider
+    scroll-snap-align: start
+
+@media (max-width: 480px)
+  .header-title
+    font-size: 0.98rem
+    letter-spacing: -0.01em
+    overflow: hidden
+    text-overflow: ellipsis
+
+    a
+      max-width: 100%
+
+    .brand-icon
+      display: none
+
+  .header-actions
+    gap: 0.35rem
+
+  .currency-select
+    min-width: 0
+    height: 34px
+    padding: 0 1.5rem 0 0.5rem
     font-size: 0.8rem
-    margin: 0 0.05rem
+    background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%
 
-@media (max-width: 600px)
-  .header-content
-    flex-direction: column
-    align-items: center
-    gap: 0.5rem
-    text-align: center
-    
   .theme-toggle-btn
-    margin: 0.25rem auto 0
-    
-  .mortgage-summary, .installment-summary
-    width: 100%
-    justify-content: center
-    box-sizing: border-box
+    width: 34px
+    height: 34px
+    font-size: 0.95rem
 
-
+  .summary-value
+    font-size: 0.8rem

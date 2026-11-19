@@ -16,6 +16,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @Output() closeSidebar = new EventEmitter<void>();
 
   user: any = null;
+
+  readonly links = [
+    { route: '/table', icon: '📋', label: 'Tabla de Amortización' },
+    { route: '/simulator', icon: '📉', label: 'Amortización Anticipada' },
+    { route: '/recurring-simulator', icon: '🔄', label: 'Cuota Recurrente' },
+    { route: '/savings-calculator', icon: '💰', label: 'Calculadora de Ahorro' },
+  ];
   private authSub!: Subscription;
 
   constructor(
@@ -38,6 +45,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   
     if (!this.isOpen) {
       this.closeSidebar.emit();
+    }
+  }
+
+  /** On drawer-sized screens close the menu after picking a link; on desktop keep it pinned. */
+  closeOnMobile(): void {
+    if (window.innerWidth < 1024 && this.isOpen) {
+      this.toggleSidebar();
     }
   }
 

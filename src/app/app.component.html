@@ -1,20 +1,26 @@
+<a class="skip-link" href="#main-content">Saltar al contenido</a>
+
 <app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="isSidebarOpen = false"></app-sidebar>
 
-<div class="sidebar-overlay" [class.open]="isSidebarOpen" (click)="isSidebarOpen = false"></div>
+<div class="sidebar-overlay" [class.open]="isSidebarOpen" (click)="isSidebarOpen = false" aria-hidden="true"></div>
 
 <div class="main-layout" [class.sidebar-open]="isSidebarOpen">
   <header class="app-header-bar">
-    <button class="hamburger-menu" (click)="toggleSidebar()" [class.active]="isSidebarOpen">
-      {{ isSidebarOpen ? '✕' : '☰' }}
+    <button
+      type="button"
+      class="hamburger-menu"
+      (click)="toggleSidebar()"
+      [class.active]="isSidebarOpen"
+      [attr.aria-expanded]="isSidebarOpen"
+      [attr.aria-label]="isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
     </button>
     <app-header></app-header>
   </header>
 
-  <nav>
-    <app-navbar></app-navbar>
-  </nav>
-
-  <main class="content-area">
+  <main class="content-area" id="main-content" tabindex="-1">
     <router-outlet></router-outlet>
   </main>
 
