@@ -1,22 +1,26 @@
 # Builds, tests and publishes the app to GitHub Pages on every push to main.
-# The site is served from the gh-pages branch:
 #   https://mariocoleguilla.github.io/mortgageCalculator/
+#
+# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# The site is uploaded as an artifact; no gh-pages branch is needed.
 
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [ "main" ]
-  # Allows a manual redeploy from the Actions tab
+  # Allows a manual (re)deploy from the Actions tab
   workflow_dispatch:
 
-# Never run two deployments at the same time; a newer push wins
+# Only one deployment at a time; never cancel one that is already publishing
 concurrency:
-  group: pages-deploy
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 permissions:
-  contents: write # push to the gh-pages branch
+  contents: read
+  pages: write    # deploy to Pages
+  id-token: write # verify the deployment comes from this repository
 
 env:
   # Pages serves the repository under /<repo-name>/
@@ -24,7 +28,7 @@ env:
   BUILD_DIR: dist/mortgageCalculator/browser
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -50,33 +54,22 @@ jobs:
       run: |
         # SPA fallback: unknown paths load the app instead of GitHub's 404 page
         cp "$BUILD_DIR/index.html" "$BUILD_DIR/404.html"
-        # Serve files starting with "_" as-is (skip Jekyll processing)
+        # Serve files as-is (skip Jekyll processing)
         touch "$BUILD_DIR/.nojekyll"
 
-    - name: Checkout gh-pages branch
-      uses: actions/checkout@v4
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        ref: gh-pages
-        path: gh-pages
+        path: ${{ env.BUILD_DIR }}
 
-    - name: Publish to gh-pages
-      env:
-        # Passed through env (not inlined) so the message can't break the script
-        COMMIT_MSG: ${{ github.event.head_commit.message || 'manual deploy' }}
-      run: |
-        # Replace the published files, keeping the branch history (allows rollbacks)
-        cd gh-pages
-        git rm -rq --ignore-unmatch .
-        cp -a "$GITHUB_WORKSPACE/$BUILD_DIR/." .
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add -A
-        if git diff --cached --quiet; then
-          echo "No changes to publish."
-          exit 0
-        fi
-        git commit -m "Deploy ${GITHUB_SHA::7}: ${COMMIT_MSG%%$'\n'*}"
-        git push origin gh-pages
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-    - name: Summary
-      run: echo "Published to https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_STEP_SUMMARY"
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

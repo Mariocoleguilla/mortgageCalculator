@@ -21,13 +21,16 @@ el workflow [`deploy.yml`](.github/workflows/deploy.yml), que:
 
 1. Instala dependencias y ejecuta los tests (si fallan, no se publica nada).
 2. Compila en producción con `--base-href /mortgageCalculator/`.
-3. Publica el contenido de `dist/mortgageCalculator/browser` en la rama `gh-pages`, que es la que sirve GitHub Pages.
+3. Sube `dist/mortgageCalculator/browser` como artefacto y lo publica en GitHub Pages
+   con las acciones oficiales (`upload-pages-artifact` + `deploy-pages`). No se usa ninguna rama `gh-pages`.
+
+**Configuración necesaria (una sola vez):** Settings → Pages → Build and deployment →
+Source: **GitHub Actions**. Con "Deploy from a branch" GitHub publicaría el `README.md` de `main` en lugar de la app.
 
 También se puede relanzar a mano desde **Actions → Deploy to GitHub Pages → Run workflow**.
 
-**Volver a una versión anterior:** cada despliegue es un commit en `gh-pages`
-(`Deploy <sha>: <mensaje>`), así que basta con hacer `git revert` del último commit de esa rama
-y hacer push.
+**Volver a una versión anterior:** en **Actions → Deploy to GitHub Pages**, abre la ejecución
+de la versión buena y pulsa **Re-run all jobs**; vuelve a compilar y publicar ese commit.
 
 ### Notas
 
