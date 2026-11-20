@@ -1,7 +1,9 @@
 # Builds, tests and publishes the app to GitHub Pages on every push to main.
-#   https://mariocoleguilla.github.io/mortgageCalculator/
+#   https://mc.mariocoleguilla.com/ (custom domain configured in Settings → Pages)
 #
-# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# One-time setup:
+#   - Settings → Pages → Build and deployment → Source: "GitHub Actions".
+#   - Settings → Secrets and variables → Actions: FIREBASE_* secrets (see .env.example).
 # The site is uploaded as an artifact; no gh-pages branch is needed.
 
 name: Deploy to GitHub Pages
@@ -23,8 +25,6 @@ permissions:
   id-token: write # verify the deployment comes from this repository
 
 env:
-  # Pages serves the repository under /<repo-name>/
-  BASE_HREF: /mortgageCalculator/
   BUILD_DIR: dist/mortgageCalculator/browser
 
 jobs:
@@ -47,8 +47,27 @@ jobs:
     - name: Run unit tests
       run: npm run test:ci
 
+    # Asks Pages where the site lives: "" with a custom domain (served at /),
+    # "/mortgageCalculator" on <user>.github.io. Avoids hardcoding the base href.
+    - name: Configure Pages
+      id: pages
+      uses: actions/configure-pages@v5
+
     - name: Build for production
-      run: npm run build -- --base-href "$BASE_HREF"
+      env:
+        BASE_HREF: ${{ steps.pages.outputs.base_path }}/
+        # Fail the build instead of shipping the app in mock mode
+        FIREBASE_CONFIG_REQUIRED: 'true'
+        FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+        FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+        FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
+      run: |
+        echo "Base href: $BASE_HREF"
+        npm run build -- --base-href "$BASE_HREF"
 
     - name: Prepare static files for Pages
       run: |
